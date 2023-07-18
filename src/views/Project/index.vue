@@ -1,9 +1,11 @@
 <template>
   <div class="app-container">
-    <h1 class="page-title">My Project</h1>
-    <router-link to="/project/create" class="text-center pan-btn green-btn button">
-      <i class="el-icon-circle-plus-outline"></i> Add Project
-    </router-link>
+    <div class="container">
+      <h1 class="page-title">My Project</h1>
+      <router-link to="/project/create" class="text-center pan-btn green-btn button">
+        <i class="el-icon-circle-plus-outline"></i> Add Project
+      </router-link>
+    </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -110,12 +112,18 @@ export default {
 </script>
 
 <style scoped>
-
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .but {
   margin-right:6px;
 }
 .button {
-  margin-bottom: 6px;
+  margin-bottom: 0.5vh;
+  margin-right:2.5vw;
+  float: right;
 }
 .edit-input {
   padding-right: 100px;
@@ -127,7 +135,7 @@ export default {
 }
 
 .page-title {
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 .add-project-button {
