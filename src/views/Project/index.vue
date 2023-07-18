@@ -110,7 +110,9 @@ export default {
     padding: 20px;
   }
 
-  .project,
+  .project {
+    width:50%;
+  }
   .task {
     border: 1px solid #ddd;
     border-radius: 5px;
