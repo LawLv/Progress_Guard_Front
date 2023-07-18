@@ -4,8 +4,8 @@
       <div class="menu-title">
         <span>Groups</span>
       </div>
-      <div v-for="group in groups" :key="group.id" class="group-item" @click="selectGroup(group.id)">
-        {{ group.name }}
+      <div v-for="group in groups" :key="group.groupId" class="group-item" @click="selectGroup(group.groupId)">
+        {{ group.groupName }}
       </div>
     </div>
     <div class="chat-container">
@@ -33,6 +33,7 @@
 
 <script>
 import { useStore } from 'vuex'
+import axios from 'axios'
 export default {
   name: 'Chatroom',
   data() {
@@ -85,11 +86,22 @@ export default {
   },
   created() {
     console.log('created')
-    this.initWebSocket()
+    // this.initWebSocket()
+    // 调用后端API获取当前userId所属的群组列表
+    const userId = 4 // 替换为实际的用户ID
+    const url = `http://localhost:8080/user-group/${userId}` // 在URL中添加占位符
+    axios.get(url)
+      .then(response => {
+        console.log(response.data)
+        this.groups = response.data // 将获取到的群组列表赋值给组件的groups数组
+      })
+      .catch(error => {
+        console.log(error)
+      })
   },
   destroyed() {
     // 销毁
-    this.websocketClose()
+    // this.websocketClose()
   },
   methods: {
     selectGroup(groupId) {
@@ -98,18 +110,18 @@ export default {
       this.selectedGroupName = selectedGroup ? selectedGroup.name : ''
     },
     // Other methods...
-    initWebSocket() { // 初始化websocket
-      this.id = sessionStorage.getItem('username')
-      let url
-      const t = this.id
-      url = 'ws://localhost:9090/websocket/' + t
-      this.websock = new WebSocket(url)
-
-      this.mesTemp = '成功与客服建立连接！  \r\n'
-      this.websock.onmessage = this.websocketOnMessage
-      this.websock.onerror = this.websocketOnError
-      this.websock.onclose = this.websocketClose
-    },
+    // initWebSocket() { // 初始化websocket
+    //   this.id = sessionStorage.getItem('username')
+    //   let url
+    //   const t = this.id
+    //   url = 'ws://localhost:8080/websocket/' + t
+    //   this.websock = new WebSocket(url)
+    //
+    //   this.mesTemp = '成功与客服建立连接！  \r\n'
+    //   this.websock.onmessage = this.websocketOnMessage
+    //   this.websock.onerror = this.websocketOnError
+    //   this.websock.onclose = this.websocketClose
+    // },
     websocketOnError() {
       console.log('连接失败')
     },
