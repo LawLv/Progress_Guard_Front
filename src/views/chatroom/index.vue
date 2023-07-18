@@ -10,23 +10,28 @@
           </div>
         </div>
         <div class="chat-container">
-          <h1 class="title">{{ selectedGroupName }}</h1>
-          <el-card class="carrd">
-            <div class="message-container">
-              <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item">
-                <div v-if="msg.sender === 'user'" class="right">
-                  {{ msg.sender }}:    {{ msg.content }}
-                </div>
-                <div v-else class="left">
-                  {{ msg.sender }}:    {{ msg.content }}
+          <div v-if="selectedGroupName === null" class="centered-content">
+            <svg-icon icon-class="wechat" />
+          </div>
+          <div v-else>
+            <h1 class="title">{{ selectedGroupName }}</h1>
+            <el-card class="carrd">
+              <div class="message-container">
+                <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item">
+                  <div v-if="msg.sender === 'user'" class="right">
+                    {{ msg.sender }}:    {{ msg.content }}
+                  </div>
+                  <div v-else class="left">
+                    {{ msg.sender }}:    {{ msg.content }}
+                  </div>
                 </div>
               </div>
+            </el-card>
+            <div class="input-container">
+              <input v-model="myMessage" class="input inputbox" type="text" placeholder="Type your message...">
+              <button class="send sendbox" @click="send">Send</button>
+              <div class="welcome">{{ mesTemp }}</div>
             </div>
-          </el-card>
-          <div class="input-container">
-            <input v-model="myMessage" class="input inputbox" type="text" placeholder="Type your message...">
-            <button class="send sendbox" @click="send">Send</button>
-            <div class="welcome">{{ mesTemp }}</div>
           </div>
         </div>
     </div>
@@ -77,7 +82,7 @@ export default {
         // More groups' messages...
       },
       selectedGroupId: null,
-      selectedGroupName: 'Chat room'
+      selectedGroupName: null
     }
   },
   setup() {
@@ -258,5 +263,15 @@ html, body {
   top: 0;
   border-top: 1px solid #8a8a8a;
   width: 80%;
+}
+
+.centered-content {
+  /* 使用这个类在没有选择组时显示的图标 */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* transform: scale(4); */
 }
 </style>
