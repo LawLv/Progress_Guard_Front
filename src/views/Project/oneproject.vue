@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <h1 class="page-title">Project Tasks</h1>
       <el-input v-model="listQuery.title" placeholder="Title" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
@@ -377,3 +378,10 @@ export default {
   }
 }
 </script>
+<style scoped>
+/* .filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+} */
+</style>
