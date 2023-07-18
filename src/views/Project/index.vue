@@ -1,122 +1,140 @@
 <template>
-  <div id="app" class="app-container">
-    <div class="sidebar" :style="{width: variables.sideBarWidth}">
-      <logo v-if="showLogo" :collapse="isCollapse" />
-      <el-scrollbar wrap-class="scrollbar-wrapper">
-        <el-menu
-          :default-active="selectedMenu"
-          :collapse="isCollapse"
-          :background-color="variables.menuBg"
-          :text-color="variables.menuText"
-          :active-text-color="variables.menuActiveText"
-          mode="vertical"
-          @select="handleSelect"
-        >
-          <el-menu-item index="project">
-            <svg-icon icon-class="tab" /> My Project
-          </el-menu-item>
-          <el-menu-item index="task">
-            <svg-icon icon-class="skill" /> My Task
-          </el-menu-item>
-        </el-menu>
-      </el-scrollbar>
-    </div>
-    <div class="main-content">
-      <div v-if="selectedMenu === 'project'">
-        <el-button type="primary">
-          <i class="el-icon-circle-plus-outline" /> New Project
-        </el-button>
-        <h3>My Project</h3>
-        <div v-for="project in projects" :key="project.id" class="project">
-          <router-link :to="`/project/${project.id}`">{{ project.title }}</router-link>
-        </div>
-        <!-- <div v-for="project in projects" :key="project.id" class="project">
-            {{ project.title }}
-          </div> -->
-      </div>
-      <div v-else>
-        <h3>My Task</h3>
-        <el-input placeholder="Add Tasks" class="task">
-          <template #prepend>
-            <i class="el-icon-circle-plus-outline" />
-          </template>
-        </el-input>
-        <div v-for="task in tasks" :key="task.id" class="task">
-          {{ task.title }} in {{ task.project }}
-        </div>
-      </div>
-    </div>
+  <div class="app-container">
+    <h1 class="page-title">My Project</h1>
+    <router-link to="/project/create" class="add-project-button">
+      <i class="el-icon-circle-plus-outline"></i> Add Project
+    </router-link>
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+      <el-table-column align="center" label="ID" width="80">
+        <template slot-scope="scope">
+          <span>{{ scope.row.id }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="180px" align="center" label="Date">
+        <template slot-scope="scope">
+          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="120px" align="center" label="Author">
+        <template slot-scope="scope">
+          <span>{{ scope.row.author }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="100px" label="Importance">
+        <template slot-scope="scope">
+          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" />
+        </template>
+      </el-table-column>
+
+      <el-table-column class-name="status-col" label="Status" width="110">
+        <template slot-scope="{row}">
+          <el-tag :type="row.status | statusFilter">
+            {{ row.status }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="300px" label="Title">
+        <template slot-scope="{row}">
+          <router-link :to="'/project/edit/'+row.id" class="link-type">
+            <span>{{ row.title }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="Actions" width="240">
+        <template slot-scope="scope">
+          <router-link :to="'project/edit'+scope.row.id">
+            <el-button type="primary" size="small" icon="el-icon-edit" class="but">
+              Edit
+            </el-button>
+          </router-link>
+          <router-link :to="'project/oneproject'">
+            <el-button type="primary" size="small" icon="el-icon-edit">
+              Tasks
+            </el-button>
+          </router-link>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Logo from '@/layout/components/Sidebar/Logo.vue'
-import variables from '@/styles/variables.scss'
+import { fetchList } from '@/api/article'
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'App',
-  components: { Logo },
+  name: 'ArticleList',
+  components: { Pagination },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        published: 'success',
+        draft: 'info',
+        deleted: 'danger'
+      }
+      return statusMap[status]
+    }
+  },
   data() {
     return {
-      selectedMenu: 'project',
-      projects: [
-        { id: 1, title: 'Project 1' },
-        { id: 2, title: 'Project 2' }
-      ],
-      tasks: [
-        { id: 1, title: 'Task 1', project: 'Project 1' },
-        { id: 2, title: 'Task 2', project: 'Project 2' }
-      ]
+      list: null,
+      total: 0,
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        limit: 20
+      }
     }
   },
-  computed: {
-    ...mapGetters([
-      'sidebar'
-    ]),
-    showLogo() {
-      return this.$store.state.settings.sidebarLogo
-    },
-    variables() {
-      return variables
-    },
-    isCollapse() {
-      return !this.sidebar.opened
-    }
+  created() {
+    this.getList()
   },
   methods: {
-    handleSelect(index) {
-      this.selectedMenu = index
+    getList() {
+      this.listLoading = true
+      fetchList(this.listQuery).then(response => {
+        this.list = response.data.items
+        this.total = response.data.total
+        this.listLoading = false
+      })
     }
   }
 }
 </script>
 
-  <style lang="scss" scoped>
-  @import "@/styles/variables.scss";
+<style scoped>
 
-  .app-container {
-    display: flex;
-  }
+.but {
+  margin-right:6px;
+}
+.edit-input {
+  padding-right: 100px;
+}
+.cancel-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+}
 
-  .sidebar {
-    width: $sideBarWidth;
-    padding: 20px;
-    border-right: 1px solid #ddd;
-  }
+.page-title {
+  margin-bottom: 20px;
+}
 
-  .main-content {
-    flex-grow: 1;
-    padding: 20px;
-  }
-
-  .project {
-    width:50%;
-  }
-  .task {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  </style>
+.add-project-button {
+  display: inline-block;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background-color: #409eff;
+  color: #fff;
+  text-decoration: none;
+}
+</style>

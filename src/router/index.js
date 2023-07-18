@@ -56,9 +56,23 @@ export const constantRoutes = [
         meta: { title: 'Project', icon: 'el-icon-s-management', affix: true }
       },
       {
-        path: 'project/:id',
+        path: 'project/oneproject',
         component: () => import('@/views/Project/oneproject'),
         name: 'oneproject',
+        meta: { title: 'Project', noCache: true, activeMenu: '/project' },
+        hidden: true
+      },
+      {
+        path: 'project/create',
+        component: () => import('@/views/Project/create'),
+        name: 'create',
+        meta: { title: 'Project', noCache: true, activeMenu: '/project' },
+        hidden: true
+      },
+      {
+        path: 'project/edit',
+        component: () => import('@/views/Project/edit'),
+        name: 'edit',
         meta: { title: 'Project', noCache: true, activeMenu: '/project' },
         hidden: true
       }
