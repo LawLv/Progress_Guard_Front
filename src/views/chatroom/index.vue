@@ -1,32 +1,34 @@
 <template>
-  <div class="main-container">
-    <div class="menu-container">
-      <div class="menu-title">
-        <span>Groups</span>
-      </div>
-      <div v-for="group in groups" :key="group.groupId" class="group-item" @click="selectGroup(group.groupId)">
-        {{ group.groupName }}
-      </div>
-    </div>
-    <div class="chat-container">
-      <h1 class="title">{{ selectedGroupName }}</h1>
-      <el-card class="carrd">
-        <div class="message-container">
-          <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item">
-            <div v-if="msg.sender === 'user'" class="right">
-              {{ msg.sender }}:    {{ msg.content }}
-            </div>
-            <div v-else class="left">
-              {{ msg.sender }}:    {{ msg.content }}
-            </div>
+  <div class="app-container">
+    <div class="filter-container">
+        <div class="menu-container">
+          <div class="menu-title">
+            <span>Groups</span>
+          </div>
+          <div v-for="group in groups" :key="group.groupId" class="group-item" @click="selectGroup(group.groupId)">
+            {{ group.groupName }}
           </div>
         </div>
-      </el-card>
-      <div class="input-container">
-        <input v-model="myMessage" class="input inputbox" type="text" placeholder="Type your message...">
-        <button class="send sendbox" @click="send">Send</button>
-        <div class="welcome">{{ mesTemp }}</div>
-      </div>
+        <div class="chat-container">
+          <h1 class="title">{{ selectedGroupName }}</h1>
+          <el-card class="carrd">
+            <div class="message-container">
+              <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item">
+                <div v-if="msg.sender === 'user'" class="right">
+                  {{ msg.sender }}:    {{ msg.content }}
+                </div>
+                <div v-else class="left">
+                  {{ msg.sender }}:    {{ msg.content }}
+                </div>
+              </div>
+            </div>
+          </el-card>
+          <div class="input-container">
+            <input v-model="myMessage" class="input inputbox" type="text" placeholder="Type your message...">
+            <button class="send sendbox" @click="send">Send</button>
+            <div class="welcome">{{ mesTemp }}</div>
+          </div>
+        </div>
     </div>
   </div>
 </template>
@@ -39,10 +41,14 @@ export default {
   data() {
     return {
       groups: [
-        { id: 1, name: 'Group 1' },
-        { id: 2, name: 'Group 2' },
-        { id: 3, name: 'Group 3' },
-        { id: 4, name: 'Group 4' }
+        { groupId: 1, groupName: 'Group 1' },
+        { groupId: 2, groupName: 'Group 2' },
+        { groupId: 3, groupName: 'Group 3' },
+        { groupId: 4, groupName: 'Group 4' }
+        // { id: 1, name: 'Group 1' },
+        // { id: 2, name: 'Group 2' },
+        // { id: 3, name: 'Group 3' },
+        // { id: 4, name: 'Group 4' }
         // More groups...
       ],
       messages: {
@@ -104,10 +110,15 @@ export default {
     // this.websocketClose()
   },
   methods: {
+    // selectGroup(groupId) {
+    //   this.selectedGroupId = groupId
+    //   const selectedGroup = this.groups.find(group => group.id === groupId)
+    //   this.selectedGroupName = selectedGroup ? selectedGroup.name : ''
+    // },
     selectGroup(groupId) {
-      this.selectedGroupId = groupId
-      const selectedGroup = this.groups.find(group => group.id === groupId)
-      this.selectedGroupName = selectedGroup ? selectedGroup.name : ''
+    this.selectedGroupId = groupId
+    const selectedGroup = this.groups.find(group => group.groupId === groupId)
+    this.selectedGroupName = selectedGroup ? selectedGroup.groupName : ''
     },
     // Other methods...
     // initWebSocket() { // 初始化websocket
@@ -152,20 +163,17 @@ export default {
 </script>
 
 <style scoped>
-.main-container {
-  display: flex;
-  height: 100%;
+.app-container {
+  /* background-color: #e631bb; */
+  padding: 1px;
+  height: 92vh;
 }
-
-/* .menu-container {
-  width: 20%;
-  border-right: 1px solid #ddd;
-  overflow-y: auto;
-} */
-
 .group-item {
   padding: 10px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .group-item:hover {
@@ -174,15 +182,17 @@ export default {
 
 .chat-container {
   width: 80%;
+  height: 91vh;
   padding: 20px;
+  background-color: #f2fbff;
 }
 .input-container {
-  width: 80%;
-  padding: 5px;
+  /* width: 80%; */
+  padding: 20px;
 }
 
 .inputbox {
-  width:80%;
+  width:86%;
   height: 4vh;
   margin-right: 0.5vw;
 }
@@ -194,13 +204,16 @@ export default {
 
 .message-container {
   height: 65vh;
+  background-color: #ffffff;
   overflow-y: auto;
   margin-bottom: 2vh;
 }
 
 .menu-container {
   width: 20%;
-  border-right: 1px solid #ddd;
+  height: 91vh;
+  background-color: #ecf9ff;
+  border-right: 1px solid #000000;
   overflow-y: auto;
   padding: 10px;
 }
@@ -208,9 +221,42 @@ export default {
 .menu-title {
   display: flex;
   align-items: center;
+  justify-content: center;
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  border-bottom: 1px solid #000000;
+  margin-bottom: 10px;
+}
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.filter-container {
+  display: flex; /* 设置此属性使子元素在水平方向上排列 */
+  height: 100%; /* 设置高度为100%，使子元素可以被拉伸到与父元素相同的高度 */
+}
+.message-item {
+  margin-top: 1vh;
+  padding-top:1vh;
+  margin-bottom: 1vh;
+  padding-bottom: 1vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.message-item::before {
+  content: '';
+  position: absolute;
+  left: 10%;  /* Calculate the correct value for your case */
+  right: 10%; /* Calculate the correct value for your case */
+  top: 0;
+  border-top: 1px solid #8a8a8a;
+  width: 80%;
+}
 </style>
