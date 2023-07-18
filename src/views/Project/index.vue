@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <h1 class="page-title">My Project</h1>
-    <router-link to="/project/create" class="add-project-button">
+    <router-link to="/project/create" class="text-center pan-btn green-btn button">
       <i class="el-icon-circle-plus-outline"></i> Add Project
     </router-link>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
@@ -113,6 +113,9 @@ export default {
 
 .but {
   margin-right:6px;
+}
+.button {
+  margin-bottom: 6px;
 }
 .edit-input {
   padding-right: 100px;
