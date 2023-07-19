@@ -54,6 +54,7 @@
                 <el-col :span="24">
                   <el-form-item label-width="75px" label="Members:" class="postInfo-container-item">
                     <el-select 
+                      class="wide-select"
                       v-model="postForm.author" 
                       :remote-method="getRemoteUserList" 
                       filterable 
@@ -301,5 +302,8 @@ export default {
     border-radius: 0px;
     border-bottom: 1px solid #bfcbd9;
   }
+}
+.wide-select {
+  width: 70vw;  // or you can set to a fixed width, like 500px
 }
 </style>
