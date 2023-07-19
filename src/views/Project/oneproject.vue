@@ -84,17 +84,20 @@
       </el-table-column>
       <el-table-column label="Actions" align="center" width="300" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            Edit
+<!--          <el-button type="primary" size="mini" @click="handleUpdate(row)">-->
+<!--            Edit-->
+<!--          </el-button>-->
+          <el-button v-if="row.status =='UNASSIGNED'" size="mini" type="success" @click="handleModifyStatus(row,'IN_PROCESS')">
+            Claim
           </el-button>
-          <el-button v-if="row.status!='COMPLETED'" size="mini" type="success" @click="handleModifyStatus(row,'COMPLETED')">
-            FINISH
+          <el-button v-if="row.status=='IN_PROCESS'" size="mini" @click="handleModifyStatus(row,'COMPLETED')">
+            Complete
           </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
-            Draft
+          <el-button v-if="row.status=='COMPLETED'" size="mini" type="danger" @click="handleModifyStatus(row,'CLOSED')">
+            Close
           </el-button>
-          <el-button v-if="row.status!='CLOSED'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            CLOSE
+          <el-button v-if="row.status=='COMPLETED'" size="mini" type="danger" @click="handleModifyStatus(row,'IN_PROCESS')">
+            Back
           </el-button>
         </template>
       </el-table-column>
@@ -286,11 +289,18 @@ export default {
       this.getList()
     },
     handleModifyStatus(row, status) {
+      console.log('row is : ')
+      console.log(row)
+      row.logUid = sessionStorage.getItem('userId')
+      row.status = status
+      axios.post('http://localhost:8080/task/update', row)
+        .then(response => {
+          console.log(response.data)
+        })
       this.$message({
         message: '操作Success',
         type: 'success'
       })
-      row.status = status
     },
     sortChange(data) {
       const { prop, order } = data
