@@ -15,7 +15,7 @@
           </div>
           <div v-else>
             <h1 class="title">{{ selectedGroupName }}</h1>
-            <el-card class="carrd">
+            <!-- <el-card class="carrd">
               <div class="message-container">
                 <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item">
                   <div v-if="msg.sender === 'user'" class="right">
@@ -23,6 +23,21 @@
                   </div>
                   <div v-else class="left">
                     {{ msg.sender }}:    {{ msg.content }}
+                  </div>
+                </div>
+              </div>
+            </el-card> -->
+            <el-card class="card">
+              <div class="message-container">
+                <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item" :class="{'message-server': msg.sender === 'server', 'message-user': msg.sender === 'user'}">
+                  <div class="message-sender" :class="{'sender-server': msg.sender === 'server', 'sender-user': msg.sender === 'user'}">
+                    {{ msg.sender }}
+                  </div>
+                  <div v-if="msg.sender === 'user'" class="message-content user-message">
+                    {{ msg.content }}
+                  </div>
+                  <div v-else class="message-content server-message">
+                    {{ msg.content }}
                   </div>
                 </div>
               </div>
@@ -76,7 +91,20 @@ export default {
         4: [
           { id: 'msg1', content: 'Hello from Group 4', sender: 'user' },
           { id: 'msg2', content: 'Response from Group 4', sender: 'server' },
-          { id: 'msg3', content: 'HajimiHajimi', sender: 'server' }
+          { id: 'msg3', content: 'HajimiHajimi', sender: 'server' },
+          { id: 'msg4', content: 'Very Good!', sender: 'user' },
+          { id: 'msg5', content: 'Hello from Group 4', sender: 'user' },
+          { id: 'msg6', content: 'Response from Group 4', sender: 'server' },
+          { id: 'msg7', content: 'HajimiHajimi', sender: 'server' },
+          { id: 'msg8', content: 'Very Good!', sender: 'user' },
+          { id: 'msg9', content: 'Hello from Group 4', sender: 'user' },
+          { id: 'msg10', content: 'Response from Group 4', sender: 'server' },
+          { id: 'msg11', content: 'HajimiHajimi', sender: 'server' },
+          { id: 'msg12', content: 'Very Good!', sender: 'user' },
+          { id: 'msg13', content: 'Hello from Group 4', sender: 'user' },
+          { id: 'msg14', content: 'Response from Group 4', sender: 'server' },
+          { id: 'msg15', content: 'HajimiHajimi', sender: 'server' },
+          { id: 'msg16', content: 'Very Good!', sender: 'user' }
           // More messages...
         ]
         // More groups' messages...
@@ -251,19 +279,24 @@ html, body {
   padding-bottom: 1vh;
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  flex-direction: column;
+  /* background-color: #fd3939; */
+}
+.message-item.message-user {
+  align-items: flex-end;
 }
 
-.message-item::before {
+/* .message-item::before {
   content: '';
   position: absolute;
-  left: 10%;  /* Calculate the correct value for your case */
-  right: 10%; /* Calculate the correct value for your case */
+  left: 10%; 
+  right: 10%;
   top: 0;
   border-top: 1px solid #8a8a8a;
   width: 80%;
-}
+} */
 
 .centered-content {
   /* 使用这个类在没有选择组时显示的图标 */
@@ -274,4 +307,42 @@ html, body {
   align-items: center;
   /* transform: scale(4); */
 }
+
+.message-server {
+  justify-content: flex-start;
+}
+
+.message-user {
+  justify-content: flex-end;
+}
+
+.message-content {
+  max-width: 60%;
+  padding: 10px;
+  border-radius: 10px;
+  /* background-color: #fd3939; */
+}
+
+.server-message {
+  background-color: #dddddd;
+  text-align: left;
+}
+
+.user-message {
+  background-color: #4caf50;
+  color: white;
+}
+.message-sender {
+    font-size: 0.7em;
+    color: gray;
+    width: 100%;
+  }
+
+  .sender-server {
+    text-align: left;
+  }
+
+  .sender-user {
+    text-align: right;
+  }
 </style>
