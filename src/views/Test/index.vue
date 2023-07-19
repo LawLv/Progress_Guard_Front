@@ -2,6 +2,9 @@
     <div class="mixin-components-container">
         <div class="container">
           <h1 class="page-title">My Project</h1>
+          
+        <el-row>
+        <el-card class="box-card project-card">
           <div class="project-grid">
             <div
               v-for="project in projects"
@@ -16,7 +19,11 @@
               <i class="el-icon-circle-plus-outline" /> Add Project
             </router-link>
           </div>
+        </el-card>
+        </el-row>
         </div>
+        
+
         <el-row>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
@@ -185,6 +192,10 @@
   </script>
   
   <style scoped>
+  .project-card {
+    margin-bottom: 4vh;
+    width: 80vw;
+  }
   .app-container {
     padding: 1px;
     height: 92vh;
