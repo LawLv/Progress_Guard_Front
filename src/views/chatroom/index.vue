@@ -220,6 +220,7 @@ export default {
   padding: 20px;
   background-color: #f2fbff;
 }
+
 .input-container {
   /* width: 80%; */
   padding: 20px;
@@ -360,4 +361,5 @@ html, body {
   margin-right: 10px; /* 添加右边距来与文字保持距离 */
   fill: #3779ba;
 }
+
 </style>
