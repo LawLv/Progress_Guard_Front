@@ -3,10 +3,10 @@
     <div class="filter-container">
         <div class="menu-container">
           <div class="menu-title">
-            <span>Groups</span>
+            <span>Chatroom</span>
           </div>
           <div v-for="group in groups" :key="group.groupId" class="group-item" @click="selectGroup(group.groupId)">
-            {{ group.groupName }}
+            <svg-icon icon-class="peoples" class="group-icon" />{{ group.groupName }}
           </div>
         </div>
         <div class="chat-container">
@@ -44,7 +44,7 @@
             </el-card>
             <div class="input-container">
               <input v-model="myMessage" class="input inputbox" type="text" placeholder="Type your message...">
-              <button class="send sendbox" @click="send">Send</button>
+              <button class="sendbox" @click="send">Send</button>
               <div class="welcome">{{ mesTemp }}</div>
             </div>
           </div>
@@ -206,7 +206,8 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
+  color: #3779ba;
 }
 
 .group-item:hover {
@@ -233,11 +234,17 @@ export default {
 .sendbox {
   width:12%;
   height:4vh;
+  background-color: #39a5e9;
+  border:0px;
+  color: #d5d5d5;
 }
 
+.card {
+  background-color: #f6fcff;
+}
 .message-container {
   height: 65vh;
-  background-color: #ffffff;
+  background-color: #f6fcff;
   overflow-y: auto;
   margin-bottom: 2vh;
 }
@@ -246,20 +253,21 @@ export default {
   width: 20%;
   height: 91vh;
   background-color: #ecf9ff;
-  border-right: 1px solid #000000;
+  border-right: 1px solid #d5d5d5;
   overflow-y: auto;
   padding: 10px;
 }
 
 .menu-title {
+  color:#2a3947;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   font-size: 20px;
   font-weight: bold;
   padding-bottom: 20px;
   padding-top: 20px;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #d5d5d5;
   margin-bottom: 10px;
 }
 html, body {
@@ -345,4 +353,11 @@ html, body {
   .sender-user {
     text-align: right;
   }
+
+  .group-icon {
+  width: 24px; /* 调整为你希望的大小 */
+  height: 24px; /* 调整为你希望的大小 */
+  margin-right: 10px; /* 添加右边距来与文字保持距离 */
+  fill: #3779ba;
+}
 </style>
