@@ -11,7 +11,7 @@
         </div>
         <div class="chat-container">
           <div v-if="selectedGroupName === null" class="centered-content">
-            <svg-icon icon-class="wechat" />
+              <img :src="require('@/views/chatroom/empty-room.png')" alt="Empty Room" />
           </div>
           <div v-else>
             <h1 class="title">{{ selectedGroupName }}</h1>
