@@ -9,6 +9,7 @@
               :key="project.id"
               class="project-block"
               @click="toTasks(project.id)"
+              :style="{ backgroundColor: project.color }"
             >
               <div class="project-title">{{ project.title }}</div>
             </div>
@@ -26,9 +27,9 @@
     data() {
       return {
         projects: [
-          { id: 1, title: 'Project 1' },
-          { id: 2, title: 'Project 2' },
-          { id: 3, title: 'Project 3' },
+          { id: 1, title: 'Project 1', color: this.getRandomLightColor() },
+          { id: 2, title: 'Project 2', color: this.getRandomLightColor() },
+          { id: 3, title: 'Project 3', color: this.getRandomLightColor() },
           // add more projects as needed
         ],
       };
@@ -36,6 +37,12 @@
     methods: {
       toTasks(id) {
         // your code to navigate to tasks
+      },
+      getRandomLightColor() {
+        const hue = Math.floor(Math.random() * 360);
+        const saturation = 80 + Math.floor(Math.random() * 20); // 80-100
+        const lightness = 85 + Math.floor(Math.random() * 15); // 85-100
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
       },
     },
   };
@@ -70,7 +77,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #eee;
     cursor: pointer;
     transition: 0.3s ease;
   }
@@ -80,6 +86,7 @@
   }
   .project-title {
     text-align: center;
+    color: #000; /* Ensure text is visible on light backgrounds */
   }
   .add-project-block {
     background-color: green;
