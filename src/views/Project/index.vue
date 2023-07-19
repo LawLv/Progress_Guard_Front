@@ -8,8 +8,8 @@
     </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
-        <template slot-scope="scope">
-          <span>{{ scope.row.groupId }}</span>
+        <template slot-scope="{row}">
+          <span>{{ row.groupId }}</span>
         </template>
       </el-table-column>
 
@@ -87,6 +87,7 @@ export default {
     return {
       list: null,
       total: 0,
+      // convertedList: null,
       listLoading: true,
       listQuery: {
         page: 1,
@@ -105,7 +106,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      axios.get('http://localhost:8080/user-group/' + sessionStorage.getItem('userId'))
+      axios.get('http://localhost:8080/user-group/getGroups/' + sessionStorage.getItem('userId'))
         .then(response => {
           console.log('get response')
           console.log(response.data)

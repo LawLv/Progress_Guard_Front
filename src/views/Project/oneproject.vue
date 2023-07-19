@@ -41,58 +41,60 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Date" width="150px" align="center">
+      <el-table-column label="Deadline" width="150px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+<!--          <span>{{ row.deadline | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>-->
+          <span>{{ formatDateTime(row.deadline) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Title" min-width="150px">
+      <el-table-column label="Task Name" min-width="150px">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.type | typeFilter }}</el-tag>
+<!--          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>-->
+<!--          <el-tag>{{ row.taskName | typeFilter }}</el-tag>-->
+          <el-tag>{{row.taskName}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Imp" width="80px">
-        <template slot-scope="{row}">
-          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
-        </template>
-      </el-table-column>
-      <el-table-column label="Readings" align="center" width="95">
-        <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Status" class-name="status-col" width="100">
+<!--      <el-table-column label="Author" width="110px" align="center">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.author }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span style="color:red;">{{ row.reviewer }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="Priority" width="80px">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="Readings" align="center" width="95">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>-->
+<!--          <span v-else>0</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="Status" class-name="status-col" width="150">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
             {{ row.status }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" width="300" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
-            Publish
+          <el-button v-if="row.status!='COMPLETED'" size="mini" type="success" @click="handleModifyStatus(row,'COMPLETED')">
+            SUBMIT
           </el-button>
           <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
             Draft
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            Delete
+          <el-button v-if="row.status!='CLOSED'" size="mini" type="danger" @click="handleDelete(row,$index)">
+            CLOSE
           </el-button>
         </template>
       </el-table-column>
@@ -102,27 +104,27 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.member" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+        <el-form-item label="Member" prop="type">
+          <el-select v-model="temp.userId" class="filter-item" placeholder="Please select">
+            <el-option v-for="item in memberOptions" :key="item.userId" :label="item.mail" :value="item.userId" />
           </el-select>
         </el-form-item>
         <el-form-item label="Deadline" prop="timestamp">
           <el-date-picker v-model="temp.deadline" type="datetime" placeholder="Please pick a date" />
         </el-form-item>
-        <el-form-item label="Title" prop="title">
-          <el-input v-model="temp.title" />
+        <el-form-item label="Task Name" prop="title">
+          <el-input v-model="temp.taskName" />
         </el-form-item>
         <el-form-item label="Status">
           <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Imp">
-          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
+        <el-form-item label="priority">
+          <el-rate v-model="temp.taskPriority" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
         </el-form-item>
-        <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-form-item label="Description">
+          <el-input v-model="temp.taskDesc" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -151,7 +153,8 @@
 import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
+import axios from "axios" // secondary package based on el-pagination
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -197,6 +200,7 @@ export default {
         // type: undefined,
         // sort: '+id'
       },
+      memberOptions: null,
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
@@ -204,11 +208,11 @@ export default {
       showReviewer: false,
       temp: {
         // id: undefined,
-        priority: 1,
+        taskPriority: 1,
         taskDesc: '',
         deadline: new Date(),
         taskName: '',
-        type: '',
+        userId: '',
         status: 'IN_PROCESS'
       },
       dialogFormVisible: false,
@@ -220,7 +224,7 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
+        type: [{ required: true, message: 'type is required', trigger: 'blur' }],
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
@@ -231,17 +235,33 @@ export default {
     this.getList()
   },
   methods: {
+    formatDateTime(dateTimeStr) {
+      const date = new Date(dateTimeStr)
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      const hour = String(date.getHours()).padStart(2, '0')
+      const minute = String(date.getMinutes()).padStart(2, '0')
+
+      return `${year}-${month}-${day} ${hour}:${minute}`
+    },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+      axios.get('http://localhost:8080/task/get-by-condition', {
+        params: {
+          userId: sessionStorage.getItem('userId'),
+          groupId: sessionStorage.getItem('groupId')
+        }
+      }).then(response => {
+        console.log(response.data)
+        this.list = response.data
+        this.listLoading = false
       })
+      axios.get('http://localhost:8080/user-group/getUsers/' + sessionStorage.getItem('groupId'))
+        .then(response => {
+          console.log(response.data)
+          this.memberOptions = response.data
+        })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -270,7 +290,7 @@ export default {
     },
     resetTemp() {
       this.temp = {
-        id: undefined,
+        // id: undefined,
         importance: 1,
         remark: '',
         timestamp: new Date(),

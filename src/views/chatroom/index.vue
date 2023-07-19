@@ -100,7 +100,7 @@ export default {
     // this.initWebSocket()
     // 调用后端API获取当前userId所属的群组列表
     const userId = 4 // 替换为实际的用户ID
-    const url = `http://localhost:8080/user-group/${userId}` // 在URL中添加占位符
+    const url = `http://localhost:8080/user-group/getGroups/${userId}` // 在URL中添加占位符
     axios.get(url)
       .then(response => {
         console.log(response.data)
