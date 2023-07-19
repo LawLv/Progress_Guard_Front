@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/vue-element-admin/article/list',
+    url: 'http://localhost:8080/task/list',
     method: 'get',
     params: query
   })
@@ -26,7 +26,8 @@ export function fetchPv(pv) {
 
 export function createArticle(data) {
   return request({
-    url: '/vue-element-admin/article/create',
+    url: 'http://localhost:8080/task/create',
+    // url: '/vue-element-admin/article/pv',
     method: 'post',
     data
   })
