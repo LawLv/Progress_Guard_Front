@@ -88,7 +88,7 @@
             Edit
           </el-button>
           <el-button v-if="row.status!='COMPLETED'" size="mini" type="success" @click="handleModifyStatus(row,'COMPLETED')">
-            SUBMIT
+            FINISH
           </el-button>
           <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
             Draft
@@ -120,8 +120,13 @@
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item label="priority">
-          <el-rate v-model="temp.taskPriority" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
+<!--        <el-form-item label="priority">-->
+<!--          <el-rate v-model="convertedPriority" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />-->
+<!--        </el-form-item>-->
+        <el-form-item label="Priority">
+          <el-select v-model="temp.taskPriority" class="filter-item" placeholder="Please select">
+            <el-option v-for="item in priorityOptions" :key="item" :label="item" :value="item" />
+          </el-select>
         </el-form-item>
         <el-form-item label="Description">
           <el-input v-model="temp.taskDesc" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
@@ -170,6 +175,16 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 }, {})
 
 export default {
+  computed: {
+    convertedPriority: {
+      get() {
+        return this.temp.taskPriority + 1 // 将评分值减去 1
+      },
+      set(value) {
+        this.temp.taskPriority = value - 1 // 将评分值加上 1
+      }
+    }
+  },
   name: 'ComplexTable',
   components: { Pagination },
   directives: { waves },
@@ -204,16 +219,19 @@ export default {
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
-      statusOptions: ['IN_PROCESS', 'COMPLETED', 'CLOSED'],
+      statusOptions: ['UNASSIGNED', 'IN_PROCESS'],
+      priorityOptions: ['LOW', 'NORMAL', 'IMPORTANT'],
       showReviewer: false,
       temp: {
         // id: undefined,
-        taskPriority: 1,
+        groupId: sessionStorage.getItem('groupId'),
+        taskPriority: 'LOW',
         taskDesc: '',
         deadline: new Date(),
         taskName: '',
         userId: '',
-        status: 'IN_PROCESS'
+        status: 'IN_PROCESS',
+        logUid: sessionStorage.getItem('userId')
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -224,9 +242,9 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'blur' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+        // type: [{ required: true, message: 'type is required', trigger: 'blur' }],
+        // timestamp: [{ required: true, message: 'timestamp is required', trigger: 'blur' }],
+        // title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
       downloadLoading: false
     }
@@ -291,12 +309,14 @@ export default {
     resetTemp() {
       this.temp = {
         // id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
+        groupId: sessionStorage.getItem('groupId'),
+        taskPriority: 'LOW',
+        taskDesc: '',
+        deadline: new Date(),
+        taskName: '',
+        userId: '',
         status: 'IN_PROCESS',
-        type: ''
+        logUid: sessionStorage.getItem('userId')
       }
     },
     handleCreate() {
@@ -310,18 +330,35 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Created Successfully',
-              type: 'success',
-              duration: 2000
+          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
+          // this.temp.author = 'vue-element-admin'
+          // createArticle(this.temp).then(() => {
+          //   this.list.unshift(this.temp)
+          //   this.dialogFormVisible = false
+          //   this.$notify({
+          //     title: 'Success',
+          //     message: 'Created Successfully',
+          //     type: 'success',
+          //     duration: 2000
+          //   })
+          // })
+          console.log('this.temp is : ')
+          console.log(this.temp)
+          axios.post('http://localhost:8080/task/create', this.temp)
+            .then(response => {
+              console.log(response.data)
+              // this.list.unshift(this.temp)
+              this.dialogFormVisible = false
+              this.$notify({
+                title: 'Success',
+                message: 'Created Successfully',
+                type: 'success',
+                duration: 2000
+              })
             })
-          })
+            .catch(error => {
+              console.error(error)
+            })
         }
       })
     },
