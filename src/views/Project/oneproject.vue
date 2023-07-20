@@ -51,7 +51,17 @@
         <template slot-scope="{row}">
 <!--          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>-->
 <!--          <el-tag>{{ row.taskName | typeFilter }}</el-tag>-->
-          <el-tag>{{row.taskName}}</el-tag>
+          <span class="link-type" @click="handleInfo">{{row.taskName}}</span>
+          <el-dialog title="Information" :visible.sync="dialogInfoVisible" @close="dialogInfoVisible = false" class="info">
+            <el-timeline>
+              <el-timeline-item v-for="(item,index) in timeline" :key="index" :timestamp="item.timestamp" placement="top">
+                <el-card>
+                  <h4>{{ item.title }}</h4>
+                  <p>{{ item.content }}</p>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
+          </el-dialog>
         </template>
       </el-table-column>
 <!--      <el-table-column label="Author" width="110px" align="center">-->
@@ -64,17 +74,24 @@
 <!--          <span style="color:red;">{{ row.reviewer }}</span>-->
 <!--        </template>-->
 <!--      </el-table-column>-->
-     <el-table-column label="Priority" width="80px">
-       <template slot-scope="{row}">
-         <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
-       </template>
-     </el-table-column>
-     <el-table-column label="Readings" align="center" width="95">
-       <template slot-scope="{row}">
-         <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-         <span v-else>0</span>
-       </template>
-     </el-table-column>
+<!--      <el-table-column label="Priority" width="80px">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="Readings" align="center" width="95">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>-->
+<!--          <span v-else>0</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+    <el-table-column label="Priority" class-name="priority-col" width="150">
+        <template slot-scope="{row}">
+          <el-tag :type="row.taskPriority | statusFilter">
+            {{ row.taskPriority }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="Status" class-name="status-col" width="150">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
@@ -123,9 +140,9 @@
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
-       <el-form-item label="priority">
-         <el-rate v-model="convertedPriority" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
-       </el-form-item>
+<!--        <el-form-item label="priority">-->
+<!--          <el-rate v-model="convertedPriority" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />-->
+<!--        </el-form-item>-->
         <el-form-item label="Priority">
           <el-select v-model="temp.taskPriority" class="filter-item" placeholder="Please select">
             <el-option v-for="item in priorityOptions" :key="item" :label="item" :value="item" />
@@ -207,7 +224,7 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: [{deadline: '2023-07-25', taskName: 'test task', status:'IN_PROCESS'}],
+      list: [{deadline: '2023-07-25', taskName: 'This is a task name.', status:'IN_PROCESS', taskPriority: 'LOW'}],
       total: 0,
       listLoading: false,
       listQuery: {
@@ -249,7 +266,50 @@ export default {
         // timestamp: [{ required: true, message: 'timestamp is required', trigger: 'blur' }],
         // title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      dialogInfoVisible: false, // added this line
+      timeline: [
+        {
+          timestamp: '2019/4/20',
+          title: 'Update Github template',
+          content: 'PanJiaChen committed 2019/4/20 20:46'
+        },
+        {
+          timestamp: '2019/4/21',
+          title: 'Update Github template',
+          content: 'PanJiaChen committed 2019/4/21 20:46'
+        },
+        {
+          timestamp: '2019/4/22',
+          title: 'Build Template',
+          content: 'PanJiaChen committed 2019/4/22 20:46'
+        },
+        {
+          timestamp: '2019/4/23',
+          title: 'Release New Version',
+          content: 'PanJiaChen committed 2019/4/23 20:46'
+        },
+        {
+          timestamp: '2019/4/20',
+          title: 'Update Github template',
+          content: 'PanJiaChen committed 2019/4/20 20:46'
+        },
+        {
+          timestamp: '2019/4/21',
+          title: 'Update Github template',
+          content: 'PanJiaChen committed 2019/4/21 20:46'
+        },
+        {
+          timestamp: '2019/4/22',
+          title: 'Build Template',
+          content: 'PanJiaChen committed 2019/4/22 20:46'
+        },
+        {
+          timestamp: '2019/4/23',
+          title: 'Release New Version',
+          content: 'PanJiaChen committed 2019/4/23 20:46'
+        }
+      ],
     }
   },
   created() {
@@ -336,6 +396,9 @@ export default {
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
+    },
+    handleInfo() {
+      this.dialogInfoVisible = true
     },
     createData() {
       this.$refs['dataForm'].validate((valid) => {
@@ -446,9 +509,13 @@ export default {
 }
 </script>
 <style scoped>
-/* .filter-container {
-  display: flex;
+.info {
   align-items: center;
-  justify-content: space-between;
-} */
+  justify-content: center;
+  height: 600px;
+  overflow-y: scroll;
+  margin-top: 200px;
+  position: fixed;
+}
+
 </style>
