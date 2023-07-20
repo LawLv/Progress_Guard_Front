@@ -5,7 +5,7 @@
           <div>
             <h1 class="title">SWS ALX</h1>
             <el-card class="card">
-              <div class="message-container">
+              <div class="message-container"  ref="messageContainer">
                 <div v-for="(msg, index) in messages" :key="index" class="message-item" :class="{'message-server': msg.sender === 'server', 'message-user': msg.sender === 'user'}">
                   <div class="message-sender" :class="{'sender-server': msg.sender === 'bot', 'sender-user': msg.sender === 'user'}">
                     {{ msg.sender }}
@@ -86,6 +86,10 @@ export default {
         content: value,
         sender: 'user'
       })
+      this.$nextTick(() => {
+        const messageContainer = this.$refs.messageContainer;
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      });
       axios.post('http://172.25.110.31:8090/sendbot', {
           "content": value,
           "uid":sessionStorage.getItem('userId')
@@ -95,6 +99,10 @@ export default {
           element['sender'] = 'bot'
           this.messages.push(element)
          });
+         this.$nextTick(() => {
+            const messageContainer = this.$refs.messageContainer;
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+          });
       })
       this.myMessage = ''
       console.log(this.messages)
@@ -107,6 +115,10 @@ export default {
         content: this.myMessage,
         sender: 'user'
       })
+      this.$nextTick(() => {
+        const messageContainer = this.$refs.messageContainer;
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      });
       axios.post('http://172.25.110.31:8090/sendbot', {
           "content": this.myMessage,
           "uid":sessionStorage.getItem('userId')
@@ -116,6 +128,10 @@ export default {
           element['sender'] = 'bot'
           this.messages.push(element)
          });
+         this.$nextTick(() => {
+            const messageContainer = this.$refs.messageContainer;
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+          });
       })
       this.myMessage = ''
       console.log(this.messages)
@@ -277,6 +293,14 @@ html, body {
   }
 
   .but {
-    background-color: #defffe;
+    background-color: #f1f0eb;
+    border: dashed;
+    transition: 0.3s ease;
+    border-width: 1px;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.16), -3px -3px 6px rgba(255, 255, 255, 0.5);
   }
+  .but:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
 </style>

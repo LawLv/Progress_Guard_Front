@@ -151,9 +151,9 @@
           var random = Math.floor(Math.random() * 2) + 1;  // generates a random number (1 or 2)
           var imagePath;
           if (random === 1) {
-              imagePath = require('@/views/Project/project1.png');
+              imagePath = require('@/views/Project/pbg.png');
           } else {
-              imagePath = require('@/views/Project/project2.png');
+              imagePath = require('@/views/Project/pbg.png');
           }
           return imagePath;
       },
@@ -252,7 +252,7 @@
     align-items: center;
     cursor: pointer;
     transition: 0.3s ease;
-    border: 3px dashed brown;
+    border: 3px dashed rgb(151, 146, 146);
   }
   .mixin-components-container {
   background-color: #eefafc;
