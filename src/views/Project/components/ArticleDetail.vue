@@ -16,7 +16,7 @@
 
       <div class="createPost-main-container">
         <el-row>
-          <Warning /> 
+          <Warning />
 
           <el-col :span="24">
             <el-form-item style="margin-bottom: 40px;" prop="title">
@@ -53,20 +53,20 @@
               <el-row>
                 <el-col :span="24">
                   <el-form-item label-width="75px" label="Members:" class="postInfo-container-item">
-                    <el-select 
+                    <el-select
                       class="wide-select"
-                      v-model="postForm.author" 
-                      :remote-method="getRemoteUserList" 
-                      filterable 
-                      default-first-option 
-                      remote 
+                      v-model="postForm.userEmails"
+                      :remote-method="getRemoteUserList"
+                      filterable
+                      default-first-option
+                      remote
                       placeholder="Search user"
                       multiple>
-                      <el-option 
-                        v-for="(item,index) in userListOptions" 
-                        :key="item+index" 
-                        :label="item" 
-                        :value="item" />
+                      <el-option
+                        v-for="(item,index) in userListOptions"
+                        :key="item+index"
+                        :label="item.mail"
+                        :value="item.mail" />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -102,6 +102,7 @@ import { fetchArticle } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
 import Warning from './Warning'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
+import axios from "axios";
 
 const defaultForm = {
   status: 'draft',
@@ -155,6 +156,10 @@ export default {
     }
     return {
       postForm: Object.assign({}, defaultForm),
+      form: {
+        userEmails: null,
+        groupName: null
+      },
       loading: false,
       userListOptions: [],
       rules: {
@@ -195,23 +200,23 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
-    fetchData(id) {
-      fetchArticle(id).then(response => {
-        this.postForm = response.data
-
-        // just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
-        // set tagsview title
-        this.setTagsViewTitle()
-
-        // set page title
-        this.setPageTitle()
-      }).catch(err => {
-        console.log(err)
-      })
-    },
+    // fetchData(id) {
+    //   fetchArticle(id).then(response => {
+    //     this.postForm = response.data
+    //
+    //     // just for test
+    //     this.postForm.title += `   Article Id:${this.postForm.id}`
+    //     this.postForm.content_short += `   Article Id:${this.postForm.id}`
+    //
+    //     // set tagsview title
+    //     this.setTagsViewTitle()
+    //
+    //     // set page title
+    //     this.setPageTitle()
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+    // },
     setTagsViewTitle() {
       const title = 'Edit Article'
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
@@ -257,10 +262,20 @@ export default {
       this.postForm.status = 'draft'
     },
     getRemoteUserList(query) {
-      searchUser(query).then(response => {
-        if (!response.data.items) return
-        this.userListOptions = response.data.items.map(v => v.name)
-      })
+      console.log(query)
+      axios.get('http://localhost:8080/user/' + query)
+        .then(response => {
+          console.log('get remote user list: ')
+          console.log(response.data)
+          // if (!response.data.items) return
+          this.userListOptions = response.data
+        })
+      // searchUser(query).then(response => {
+      //   console.log('get remote user list: ')
+      //   console.log(response.data)
+      //   if (!response.data.items) return
+      //   this.userListOptions = response.data.items.map(v => v.name)
+      // })
     }
   }
 }

@@ -135,6 +135,19 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
+
+  {
+    path: '/Task',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/Task/index'),
+        name: 'Task',
+        meta: { title: 'Task', icon: 'list', affix: true }
+      }
+    ]
+  },
   {
     path: '/guide',
     component: Layout,

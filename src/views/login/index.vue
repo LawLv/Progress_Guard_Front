@@ -76,6 +76,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
+import axios from "axios";
 
 export default {
   name: 'Login',
@@ -153,6 +154,31 @@ export default {
       })
     },
     handleLogin() {
+      // axios.get('http://localhost:8080/user/login', {
+      //   params: this.loginForm
+      // })
+      //   .then(response => {
+      //     console.log(response.data)
+      //     if (response.data.length !== 0) {
+      //       console.log('in push')
+      //       this.loading = false
+      //       sessionStorage.setItem('userId', response.data.userId)
+      //       this.loginForm = {
+      //         username: 'admin',
+      //         password: '111111'
+      //       }
+      //       this.$store.dispatch('user/login', this.loginForm)
+      //         .then(() => {
+      //           this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+      //           this.loading = false
+      //         })
+      //       // this.$router.push('/project')
+      //       // this.$router.replace('/project')
+      //       // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+      //     } else {
+      //       this.loading = false
+      //     }
+      //   })
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -164,6 +190,16 @@ export default {
             .catch(() => {
               this.loading = false
             })
+          // axios.post('http://localhost:8080/user/login', this.loginForm)
+          //   .then(response => {
+          //     if (response.data !== null) {
+          //       this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          //       this.loading = false
+          //       sessionStorage.setItem('userId', response.data.userId)
+          //     } else {
+          //       this.loading = false
+          //     }
+          //   })
         } else {
           console.log('error submit!!')
           return false
