@@ -1,34 +1,43 @@
 <template>
-    <div class="app-container">
-      <div class="filter-container">
-          <div class="chat-container">
-            <div>
-              <h1 class="title">SWS ALX</h1>
-              <el-card class="card">
-                <div class="message-container">
-                  <div v-for="msg in messages" :key="msg.id" class="message-item" :class="{'message-server': msg.sender === 'server', 'message-user': msg.sender === 'user'}">
-                    <div class="message-sender" :class="{'sender-server': msg.sender === 'bot', 'sender-user': msg.sender === 'user'}">
-                      {{ msg.sender }}
+  <div class="app-container">
+    <div class="filter-container">
+        <div class="chat-container">
+          <div>
+            <h1 class="title">SWS ALX</h1>
+            <el-card class="card">
+              <div class="message-container">
+                <div v-for="msg in messages" :key="msg.id" class="message-item" :class="{'message-server': msg.sender === 'server', 'message-user': msg.sender === 'user'}">
+                  <div class="message-sender" :class="{'sender-server': msg.sender === 'bot', 'sender-user': msg.sender === 'user'}">
+                    {{ msg.sender }}
+                  </div>
+                  <div v-if="msg.sender === 'user'" class="message-content user-message">
+                    {{ msg.content }}
+                  </div>
+                  <div v-else>
+                    <div v-if="msg.content.msgType === 'button'" class="message-content server-message">
+                      <p>{{ msg.content.title }}</p>
+                      <button v-for="button in msg.content.buttons" :key="button.value" @click="sendButtonMessage(button.value)" class="but">
+                        {{ button.title }}
+                      </button>
                     </div>
-                    <div v-if="msg.sender === 'user'" class="message-content user-message">
-                      {{ msg.content }}
-                    </div>
-                    <div v-else class="message-content server-message">
-                      {{ msg.content }}
+                    <div v-else-if="msg.content.msgType === 'plain'" class="message-content server-message">
+                      <p>{{ msg.content.content }}</p>
                     </div>
                   </div>
                 </div>
-              </el-card>
-              <div class="input-container">
-                <input v-model="myMessage" class="input inputbox" type="text" placeholder="Type your message...">
-                <button class="sendbox" @click="send">Send</button>
-                <div class="welcome">{{ mesTemp }}</div>
               </div>
+            </el-card>
+            <div class="input-container">
+              <input v-model="myMessage" class="input inputbox" type="text" placeholder="Type your message...">
+              <button class="sendbox" @click="send">Send</button>
+              <div class="welcome">{{ mesTemp }}</div>
             </div>
           </div>
-      </div>
+        </div>
     </div>
+  </div>
 </template>
+
 
 
 <script>
@@ -39,23 +48,28 @@ export default {
   data() {
     return {
       messages: [
-          { id: 'msg1', content: 'Hello from Group 4', sender: 'user' },
-          { id: 'msg2', content: 'Response from Group 4', sender: 'bot' },
-          { id: 'msg3', content: 'HajimiHajimi', sender: 'bot' },
-          { id: 'msg4', content: 'Very Good!', sender: 'user' },
-          { id: 'msg5', content: 'Hello from Group 4', sender: 'user' },
-          { id: 'msg6', content: 'Response from Group 4', sender: 'bot' },
-          { id: 'msg7', content: 'HajimiHajimi', sender: 'bot' },
-          { id: 'msg8', content: 'Very Good!', sender: 'user' },
-          { id: 'msg9', content: 'Hello from Group 4', sender: 'user' },
-          { id: 'msg10', content: 'Response from Group 4', sender: 'bot' },
-          { id: 'msg11', content: 'HajimiHajimi', sender: 'bot' },
-          { id: 'msg12', content: 'Very Good!', sender: 'user' },
-          { id: 'msg13', content: 'Hello from Group 4', sender: 'user' },
-          { id: 'msg14', content: 'Response from Group 4', sender: 'bot' },
-          { id: 'msg15', content: 'HajimiHajimi', sender: 'bot' },
-          { id: 'msg16', content: 'Very Good!', sender: 'user' }
-        ]
+        { 
+          id: 'msg1', 
+          content: { title: 'Hello! Here is the options for you, so what do you want to do?', 
+                     buttons: [
+                       { title: 'Your Task Deadline', value: 'i want to know my ddls' },
+                       { title: 'Your Assigned Task', value: 'i want to know my task' },
+                       { title: 'Assign Task', value: 'assign task' } 
+                     ], 
+                     msgType: 'button' }, 
+          sender: 'bot' 
+        },
+        { 
+          id: 'msg2', 
+          content: { content: 'Hello, what can I help you?', msgType: 'plain' }, 
+          sender: 'bot' 
+        },
+        { 
+          id: 'msg3', 
+          content: 'I want to know my deadlines', 
+          sender: 'user' 
+        }
+      ]
     }
   },
   setup() {
@@ -79,6 +93,10 @@ export default {
       })
   },
   methods: {
+    buttonClick(value) {
+      // You can update this method to send the value to the backend
+      console.log(value);
+    },
     websocketOnError() {
       console.log('连接失败')
     },
@@ -109,6 +127,10 @@ export default {
 </script>
 
 <style scoped>
+.message-content button {
+    margin-top: 10px;
+    display: block;
+  }
 .app-container {
   /* background-color: #e631bb; */
   padding: 1px;
@@ -227,7 +249,7 @@ html, body {
 }
 
 .message-content {
-  max-width: 60%;
+  max-width: 100%;
   padding: 10px;
   border-radius: 10px;
   /* background-color: #fd3939; */
@@ -256,4 +278,7 @@ html, body {
     text-align: right;
   }
 
+  .but {
+    background-color: #defffe;
+  }
 </style>
