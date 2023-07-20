@@ -277,6 +277,9 @@ html, body {
   }
 
   .but {
-    background-color: #defffe;
+    background-color: #fffaf1;
+    border: dashed;
+    border-width: 1px;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.16), -3px -3px 6px rgba(255, 255, 255, 0.5);
   }
 </style>
