@@ -241,7 +241,7 @@
     align-items: center;
     cursor: pointer;
     transition: 0.3s ease;
-    border: 3px dashed brown;
+    border: 3px dashed rgb(151, 146, 146);
   }
   .mixin-components-container {
   background-color: #eefafc;
