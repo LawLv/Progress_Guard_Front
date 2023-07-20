@@ -64,17 +64,17 @@
 <!--          <span style="color:red;">{{ row.reviewer }}</span>-->
 <!--        </template>-->
 <!--      </el-table-column>-->
-<!--      <el-table-column label="Priority" width="80px">-->
-<!--        <template slot-scope="{row}">-->
-<!--          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column label="Readings" align="center" width="95">-->
-<!--        <template slot-scope="{row}">-->
-<!--          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>-->
-<!--          <span v-else>0</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+     <el-table-column label="Priority" width="80px">
+       <template slot-scope="{row}">
+         <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
+       </template>
+     </el-table-column>
+     <el-table-column label="Readings" align="center" width="95">
+       <template slot-scope="{row}">
+         <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
+         <span v-else>0</span>
+       </template>
+     </el-table-column>
       <el-table-column label="Status" class-name="status-col" width="150">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
@@ -123,9 +123,9 @@
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
-<!--        <el-form-item label="priority">-->
-<!--          <el-rate v-model="convertedPriority" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />-->
-<!--        </el-form-item>-->
+       <el-form-item label="priority">
+         <el-rate v-model="convertedPriority" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
+       </el-form-item>
         <el-form-item label="Priority">
           <el-select v-model="temp.taskPriority" class="filter-item" placeholder="Please select">
             <el-option v-for="item in priorityOptions" :key="item" :label="item" :value="item" />
