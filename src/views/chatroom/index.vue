@@ -27,25 +27,51 @@
                 </div>
               </div>
             </el-card> -->
+<!--            <el-card class="card">-->
+<!--              <div class="message-container">-->
+<!--                <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item" :class="{'message-server': msg.sender === 'server', 'message-user': msg.sender === 'user'}">-->
+<!--                  <div class="message-sender" :class="{'sender-server': msg.sender === 'server', 'sender-user': msg.sender === 'user'}">-->
+<!--                    {{ msg.sender }}-->
+<!--                  </div>-->
+<!--                  <div v-if="msg.sender === 'user'" class="message-content user-message">-->
+<!--                    {{ msg.content }}-->
+<!--                  </div>-->
+<!--                  <div v-else class="message-content server-message">-->
+<!--                    {{ msg.content }}-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </el-card>-->
             <el-card class="card">
               <div class="message-container">
-                <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item" :class="{'message-server': msg.sender === 'server', 'message-user': msg.sender === 'user'}">
-                  <div class="message-sender" :class="{'sender-server': msg.sender === 'server', 'sender-user': msg.sender === 'user'}">
+                <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item" :class="{'message-server': msg.fromUid !== sessionStorage.getItem('userId'), 'message-user': msg.fromUid === sessionStorage.getItem('userId')}">
+<!--                <div v-for="msg in selectedGroupMessages" :key="msg.id" class="message-item">-->
+                  <div class="message-sender" :class="{'sender-server':msg.fromUid !== sessionStorage.getItem('userId'), 'sender-user': msg.fromUid === sessionStorage.getItem('userId')}">
                     {{ msg.sender }}
                   </div>
-                  <div v-if="msg.sender === 'user'" class="message-content user-message">
-                    {{ msg.content }}
-                  </div>
-                  <div v-else class="message-content server-message">
-                    {{ msg.content }}
-                  </div>
+<!--                  <div class="message-sender" >-->
+<!--                    {{ msg.sender }}-->
+<!--                  </div>-->
+<!--                  <div v-if="msg.fromUid === sessionStorage.getItem('userId')" class="message-content user-message">-->
+<!--                    {{ msg.content }}-->
+<!--                  </div>-->
+<!--                  <div v-else class="message-content server-message">-->
+<!--                    {{ msg.content }}-->
+<!--                  </div>-->
+
+                                    <div v-if="msg.fromUid === sessionStorage.getItem('userId')" class="message-content user-message">
+                                      {{ msg.content }}
+                                    </div>
+                                    <div v-else class="message-content server-message">
+                                      {{ msg.content }}
+                                    </div>
                 </div>
               </div>
             </el-card>
             <div class="input-container">
               <input v-model="myMessage" class="input inputbox" type="text" placeholder="Type your message...">
               <button class="sendbox" @click="send">Send</button>
-              <div class="welcome">{{ mesTemp }}</div>
+<!--              <div class="welcome">{{ mesTemp }}</div>-->
             </div>
           </div>
         </div>
@@ -56,10 +82,14 @@
 <script>
 import { useStore } from 'vuex'
 import axios from 'axios'
+import { v4 as uuidv4 } from 'uuid';
 export default {
   name: 'Chatroom',
   data() {
     return {
+      fromUid: null,
+      myMessage: null,
+      sessionStorage: sessionStorage,
       groups: [
         { groupId: 1, groupName: 'Group 1' },
         { groupId: 2, groupName: 'Group 2' },
@@ -71,7 +101,12 @@ export default {
         // { id: 4, name: 'Group 4' }
         // More groups...
       ],
+      groupMembers: null,
       messages: {
+        '1680923793096937473': [
+          { id: 'msg1', content: 'Hello from Group 1', sender: 'Emily Brown', fromUid: '4' },
+          { id: 'msg2', content: 'Response from Group 1', sender: 'server', fromUid: '5' }
+        ],
         1: [
           { id: 'msg1', content: 'Hello from Group 1', sender: 'user' },
           { id: 'msg2', content: 'Response from Group 1', sender: 'server' }
@@ -113,6 +148,7 @@ export default {
       selectedGroupName: null
     }
   },
+
   setup() {
     const store = useStore() // 该方法用于返回store 实例
     console.log(store) // store 实例对象
@@ -121,6 +157,13 @@ export default {
   computed: {
     selectedGroupMessages() {
       return this.messages[this.selectedGroupId] || []
+    },
+    userName() {
+      console.log('in username')
+      console.log(this.fromUid)
+      const user = this.groupMembers.find(user => user.userId === this.fromUid)
+      // console.log(user.userName)
+      return user ? user.username : ''
     }
   },
   created() {
@@ -143,49 +186,44 @@ export default {
     // this.websocketClose()
   },
   methods: {
-    // selectGroup(groupId) {
-    //   this.selectedGroupId = groupId
-    //   const selectedGroup = this.groups.find(group => group.id === groupId)
-    //   this.selectedGroupName = selectedGroup ? selectedGroup.name : ''
-    // },
     selectGroup(groupId) {
-    this.selectedGroupId = groupId
-    const selectedGroup = this.groups.find(group => group.groupId === groupId)
-    this.selectedGroupName = selectedGroup ? selectedGroup.groupName : ''
+      this.selectedGroupId = groupId
+      const selectedGroup = this.groups.find(group => group.groupId === groupId)
+      this.selectedGroupName = selectedGroup ? selectedGroup.groupName : ''
+      axios.get('http://localhost:8080/user-group/getUsers/' + this.selectedGroupId)
+        .then(response => {
+          this.groupMembers = response.data
+        })
+      // 获取聊天记录也在这
+      // eslint-disable-next-line no-prototype-builtins
+      if (!this.messages.hasOwnProperty(groupId)) {
+        this.messages[groupId] = []
+      }
+      // this.messages[groupId] = []
+      this.initWebSocket()
     },
     // Other methods...
-    // initWebSocket() { // 初始化websocket
-    //   this.id = sessionStorage.getItem('username')
-    //   let url
-    //   const t = this.id
-    //   url = 'ws://localhost:8080/websocket/' + t
-    //   this.websock = new WebSocket(url)
-    //
-    //   this.mesTemp = '成功与客服建立连接！  \r\n'
-    //   this.websock.onmessage = this.websocketOnMessage
-    //   this.websock.onerror = this.websocketOnError
-    //   this.websock.onclose = this.websocketClose
-    // },
+    initWebSocket() { // 初始化websocket
+      let url
+      // eslint-disable-next-line prefer-const
+      url = 'ws://localhost:8081/ws/' + this.selectedGroupId + '/' + sessionStorage.getItem('userId')
+      this.websock = new WebSocket(url)
+      this.websock.onmessage = (event) => {
+        const message = JSON.parse(event.data)
+        console.log('收到消息:', message)
+        // message.text = content, message.fromUid的对应username = sender
+        this.fromUid = message.fromUid
+        this.messages[this.selectedGroupId].push({ id: message.date, content: message.text, sender: this.userName, fromUid: message.fromUid })
+        console.log('selectedMessage is : ')
+        console.log(this.selectedGroupMessages)
+      }
+    },
     websocketOnError() {
       console.log('连接失败')
     },
-    websocketOnMessage(e) { // 数据接收
-      this.msgList.push('###::' + e.data)
-    },
     send() {
-      if (!window.WebSocket) {
-        return
-      }
-      if (this.websock.readyState === WebSocket.OPEN) {
-        this.msgList.push('####::' + this.myMessage)
-        const resObj = {
-          id: '-1',
-          message: this.id + ':' + this.myMessage
-        }
-        this.websock.send(JSON.stringify(resObj))
-      } else {
-        alert('与客服连接没有建立成功！')
-      }
+      this.websock.send(this.myMessage)
+      this.myMessage = null
     },
     websocketClose(e) { // 关闭
       this.mesTemp = '与客服连接关闭。 \r\n'
@@ -300,7 +338,7 @@ html, body {
 /* .message-item::before {
   content: '';
   position: absolute;
-  left: 10%; 
+  left: 10%;
   right: 10%;
   top: 0;
   border-top: 1px solid #8a8a8a;
