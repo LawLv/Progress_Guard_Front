@@ -207,9 +207,9 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: null,
+      list: [{deadline: '2023-07-25', taskName: 'test task', status:'IN_PROCESS'}],
       total: 0,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
         // page: 1,
         // limit: 20,
@@ -253,7 +253,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+    // this.getList()
   },
   methods: {
     formatDateTime(dateTimeStr) {
