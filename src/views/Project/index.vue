@@ -1,163 +1,254 @@
 <template>
-  <div class="app-container">
-    <div class="container">
-      <h1 class="page-title">My Project</h1>
-      <router-link to="/project/create" class="text-center pan-btn green-btn button">
-        <i class="el-icon-circle-plus-outline" /> Add Project
-      </router-link>
-    </div>
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="ID" width="80">
-        <template slot-scope="{row}">
-          <span>{{ row.groupId }}</span>
-        </template>
-      </el-table-column>
-
-      <!--      <el-table-column width="180px" align="center" label="Date">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
-
-      <!--      <el-table-column width="120px" align="center" label="Author">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <span>{{ scope.row.author }}</span>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
-
-      <!--      <el-table-column width="100px" label="Importance">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" />-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
-
-      <!--      <el-table-column class-name="status-col" label="Status" width="110">-->
-      <!--        <template slot-scope="{row}">-->
-      <!--          <el-tag :type="row.status | statusFilter">-->
-      <!--            {{ row.status }}-->
-      <!--          </el-tag>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
-
-      <el-table-column min-width="300px" label="Title">
-        <template slot-scope="{row}">
-          <!--          <router-link :to="'/project/edit/'+row." class="link-type">-->
-          <span>{{ row.groupName }}</span>
-          <!--          </router-link>-->
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="Actions" width="240">
-        <template slot-scope="scope">
-          <router-link :to="'project/edit'+scope.row.id">
-            <el-button type="primary" size="small" icon="el-icon-edit" class="but">
-              Edit
-            </el-button>
+  <div class="mixin-components-container">
+      <div class="container">
+        <h1 class="page-title">My Project</h1>
+        <div class="component-item">
+          <router-link to="/project/chatbot">
+          <pan-thumb width="100px" height="100px" image="https://cdn.discordapp.com/attachments/1095324372685832286/1131519155900784650/chatbot.png">
+            Ask me
+          </pan-thumb>
           </router-link>
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="toTasks(scope.row.groupId)">
-            Tasks
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </div>
+      <el-row>
+      <el-card class="project-card">
+        <div class="project-grid">
+          <div
+              v-for="project in projects"
+              :key="project.id"
+              class="project-block"
+              @click="toTasks(scope.row.groupId)"
+              :style="{ backgroundColor: project.color }"
+          >
+              <div class="project-image" :style="{'background-image': 'url(' + getProjectImage(project.id) + ')'}"></div>
+              <div class="project-title">{{ project.title }}</div>
+          </div>
+          <router-link to="/project/create" class="add-project-block">
+            <i class="el-icon-circle-plus-outline" /> Add Project
+          </router-link>
+        </div>
+      </el-card>
+      </el-row>
+      </div>
+    
+      <!-- <div class="dashboard-container">
+          <component :is="currentRole" />
+      </div>
+      <el-row :gutter="20" style="margin-top:50px;">
+          <el-col :span="6">
+              <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                  <span>Material Design 的input</span>
+              </div>
+              <div style="height:100px;">
+                  <el-form :model="demo" :rules="demoRules">
+                  <el-form-item prop="title">
+                      <md-input v-model="demo.title" icon="el-icon-search" name="title" placeholder="输入标题">
+                      标题
+                      </md-input>
+                  </el-form-item>
+                  </el-form>
+              </div>
+              </el-card>
+          </el-col>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+          <el-col :span="6">
+              <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                  <span>图片hover效果</span>
+              </div>
+              <div class="component-item">
+                  <pan-thumb width="100px" height="100px" image="https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191">
+                  vue-element-admin
+                  </pan-thumb>
+              </div>
+              </el-card>
+          </el-col>
+
+          <el-col :span="6">
+              <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                  <span>水波纹 waves v-directive</span>
+              </div>
+              <div class="component-item">
+                  <el-button v-waves type="primary">
+                  水波纹效果
+                  </el-button>
+              </div>
+              </el-card>
+          </el-col>
+
+          <el-col :span="6">
+              <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                  <span>hover text</span>
+              </div>
+              <div class="component-item">
+                  <mallki class-name="mallki-text" text="vue-element-admin" />
+              </div>
+              </el-card>
+          </el-col>
+      </el-row> -->
   </div>
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
-import Pagination from '@/components/Pagination'
-import axios from 'axios' // Secondary package based on el-pagination
+import { mapGetters } from 'vuex'
+import adminDashboard from './admin'
+import PanThumb from '@/components/PanThumb'
+import MdInput from '@/components/MDinput'
+import Mallki from '@/components/TextHoverEffect/Mallki'
+import waves from '@/directive/waves/index.js' // 水波纹指令
 
 export default {
-  name: 'ArticleList',
-  components: { Pagination },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
+  components: {
+  PanThumb,
+  MdInput,
+  Mallki,
+  adminDashboard
+  },
+  directives: {
+  waves
   },
   data() {
+      const validate = (rule, value, callback) => {
+          if (value.length !== 6) {
+              callback(new Error('请输入六个字符'))
+          } else {
+              callback()
+          }
+          }
     return {
-      list: null,
-      total: 0,
-      // convertedList: null,
-      listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20
-      }
-    }
-  },
-  created() {
-    sessionStorage.setItem('userId', '4')
-    this.getList()
+      currentRole: 'adminDashboard',
+      demo: {
+      title: ''
+    },
+    demoRules: {
+      title: [{ required: true, trigger: 'change', validator: validate }]
+    },
+      projects: [
+        { id: 1, title: 'Project 1', color: this.getRandomLightColor() },
+        { id: 2, title: 'Project 2', color: this.getRandomLightColor() },
+        { id: 3, title: 'Project 3', color: this.getRandomLightColor() },
+        { id: 4, title: 'Project 3', color: this.getRandomLightColor() },
+        { id: 5, title: 'Project 3', color: this.getRandomLightColor() },
+        { id: 6, title: 'Project 3', color: this.getRandomLightColor() },
+        { id: 7, title: 'Project 3', color: this.getRandomLightColor() },
+        // add more projects as needed
+      ],
+    };
   },
   methods: {
+    getProjectImage: function(projectId) {
+        var random = Math.floor(Math.random() * 2) + 1;  // generates a random number (1 or 2)
+        var imagePath;
+        if (random === 1) {
+            imagePath = require('@/views/Project/pbg.png');
+        } else {
+            imagePath = require('@/views/Project/pbg.png');
+        }
+        return imagePath;
+    },
     toTasks(groupId) {
       sessionStorage.setItem('groupId', groupId)
-      this.$router.push('project/oneproject')
+      this.$router.push('@/views/project/oneproject')
     },
-    getList() {
-      this.listLoading = true
-      axios.get('http://localhost:8080/user-group/getGroups/' + sessionStorage.getItem('userId'))
-        .then(response => {
-          console.log('get response')
-          console.log(response.data)
-          this.list = response.data
-          this.listLoading = false
-        })
-      // fetchList(this.listQuery).then(response => {
-      //   this.list = response.data.items
-      //   this.total = response.data.total
-      //   this.listLoading = false
-      // })
-    }
+    
+    getRandomLightColor() {
+      const hue = Math.floor(Math.random() * 360);
+      const saturation = 80 + Math.floor(Math.random() * 20); // 80-100
+      const lightness = 85 + Math.floor(Math.random() * 15); // 85-100
+      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    },
+  },
+  computed: {
+      ...mapGetters([
+      'roles'
+      ])
+  },
+  created() {
+      if (!this.roles.includes('admin')) {
+      this.currentRole = 'editorDashboard'
+      }
   }
-}
+};
 </script>
 
 <style scoped>
+.project-card {
+  margin-bottom: 4vh;
+  width: 83vw;
+  background-color: #f2f2f2;
+  /* opacity: 0.5; */
+  border-radius: 2em;
+}
+
 .container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
 }
-.but {
-  margin-right:6px;
+.project-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 1em;
 }
-.button {
-  margin-bottom: 0.5vh;
-  margin-right:2.5vw;
-  float: right;
+.project-block {
+  width: 10vw;
+  height: 10vw;
+  border-radius: 1em;
+  margin: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+  overflow: hidden;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.16), -3px -3px 6px rgba(255, 255, 255, 0.5);
 }
-.edit-input {
-  padding-right: 100px;
-}
-.cancel-btn {
-  position: absolute;
-  right: 15px;
-  top: 10px;
+.add-project-block:hover,
+.project-block:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.page-title {
-  margin: 0;
+.project-image {
+  width: 100%;
+  height: 70%;
+  background-size: cover;
+  background-position: center;
 }
 
-.add-project-button {
-  display: inline-block;
-  margin-left: 10px;
-  margin-bottom: 10px;
-  padding: 6px 12px;
-  border-radius: 4px;
-  background-color: #409eff;
-  color: #fff;
-  text-decoration: none;
+.project-title {
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #000; /* Ensure text is visible on light backgrounds */
+}
+.add-project-block {
+  background-color: rgb(239, 255, 239) transparent;
+  color: rgb(0, 0, 0);
+  width: 10vw;
+  height: 10vw;
+  border-radius: 1em;
+  margin: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+  border: 3px dashed rgb(151, 146, 146);
+}
+.mixin-components-container {
+background-color: #eefafc;
+padding: 30px;
+min-height: calc(100vh - 84px);
+}
+.component-item{
+min-height: 100px;
 }
 </style>

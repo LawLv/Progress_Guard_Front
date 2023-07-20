@@ -85,15 +85,27 @@ export const constantRoutes = [
       }
     ]
   },
+  // {
+  //   path: '/Test',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/Test/index'),
+  //       name: 'Test',
+  //       meta: { title: 'Test', icon: 'list', affix: true }
+  //     }
+  //   ]
+  // },
   {
-    path: '/Test',
+    path: '/project/chatbot',
     component: Layout,
     children: [
       {
         path: 'index',
-        component: () => import('@/views/Test/index'),
+        component: () => import('@/views/Project/chatbot'),
         name: 'Test',
-        meta: { title: 'Test', icon: 'list', affix: true }
+        meta: { title: 'Chatbot', icon: 'people', affix: true }
       }
     ]
   },
@@ -136,31 +148,31 @@ export const constantRoutes = [
   //   ]
   // },
 
-  {
-    path: '/Task',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/Task/index'),
-        name: 'Task',
-        meta: { title: 'Task', icon: 'list', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/Task',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/Task/index'),
+  //       name: 'Task',
+  //       meta: { title: 'Task', icon: 'list', affix: true }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/guide',
+  //   component: Layout,
+  //   redirect: '/guide/index',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/guide/index'),
+  //       name: 'Guide',
+  //       meta: { title: 'Guide', icon: 'guide', noCache: true }
+  //     }
+  //   ]
+  // },
   {
     path: '/profile',
     component: Layout,
@@ -183,21 +195,21 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
 
-  {
-    path: '/icon',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'Icons', icon: 'icon', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/icon',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/icons/index'),
+  //       name: 'Icons',
+  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
+  //     }
+  //   ]
+  // },
 
   /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
+  // componentsRouter,
   // chartsRouter,
   // nestedRouter,
   // tableRouter,
