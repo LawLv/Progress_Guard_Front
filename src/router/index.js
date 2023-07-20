@@ -75,6 +75,13 @@ export const constantRoutes = [
         name: 'edit',
         meta: { title: 'Project', noCache: true, activeMenu: '/project' },
         hidden: true
+      },
+      {
+        path: 'project/chatbot',
+        component: () => import('@/views/Project/chatbot'),
+        name: 'chatbot',
+        meta: { title: 'Project', noCache: true, activeMenu: '/project' },
+        hidden: true
       }
     ]
   },
