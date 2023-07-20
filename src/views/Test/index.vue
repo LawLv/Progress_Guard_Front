@@ -2,7 +2,13 @@
     <div class="mixin-components-container">
         <div class="container">
           <h1 class="page-title">My Project</h1>
-          
+          <div class="component-item">
+            <router-link to="/project/chatbot">
+            <pan-thumb width="100px" height="100px" image="https://cdn.discordapp.com/attachments/1095324372685832286/1131519155900784650/chatbot.png">
+              Ask me
+            </pan-thumb>
+            </router-link>
+          </div>
         <el-row>
         <el-card class="project-card">
           <div class="project-grid">
@@ -146,6 +152,7 @@
         sessionStorage.setItem('groupId', groupId)
         this.$router.push('@/views/project/oneproject')
       },
+      
       getRandomLightColor() {
         const hue = Math.floor(Math.random() * 360);
         const saturation = 80 + Math.floor(Math.random() * 20); // 80-100

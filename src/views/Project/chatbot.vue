@@ -6,7 +6,7 @@
             <h1 class="title">SWS ALX</h1>
             <el-card class="card">
               <div class="message-container">
-                <div v-for="msg in messages" :key="msg.id" class="message-item" :class="{'message-server': msg.sender === 'server', 'message-user': msg.sender === 'user'}">
+                <div v-for="(msg, index) in messages" :key="index" class="message-item" :class="{'message-server': msg.sender === 'server', 'message-user': msg.sender === 'user'}">
                   <div class="message-sender" :class="{'sender-server': msg.sender === 'bot', 'sender-user': msg.sender === 'user'}">
                     {{ msg.sender }}
                   </div>
@@ -14,14 +14,14 @@
                     {{ msg.content }}
                   </div>
                   <div v-else>
-                    <div v-if="msg.content.msgType === 'button'" class="message-content server-message">
-                      <p>{{ msg.content.title }}</p>
-                      <button v-for="button in msg.content.buttons" :key="button.value" @click="sendButtonMessage(button.value)" class="but">
+                    <div v-if="msg.msgType === 'button'" class="message-content server-message">
+                      <p>{{ msg.title }}</p>
+                      <button v-for="button in msg.buttons" :key="button.value" @click="sendButtonMessage(button.value)" class="but">
                         {{ button.title }}
                       </button>
                     </div>
-                    <div v-else-if="msg.content.msgType === 'plain'" class="message-content server-message">
-                      <p>{{ msg.content.content }}</p>
+                    <div v-else-if="msg.msgType === 'plain'" class="message-content server-message">
+                      <p>{{ msg.content }}</p>
                     </div>
                   </div>
                 </div>
@@ -30,7 +30,6 @@
             <div class="input-container">
               <input v-model="myMessage" class="input inputbox" type="text" placeholder="Type your message...">
               <button class="sendbox" @click="send">Send</button>
-              <div class="welcome">{{ mesTemp }}</div>
             </div>
           </div>
         </div>
@@ -47,21 +46,22 @@ export default {
   name: 'Chatroom',
   data() {
     return {
+      myMessage: null,
       messages: [
         { 
           id: 'msg1', 
-          content: { title: 'Hello! Here is the options for you, so what do you want to do?', 
-                     buttons: [
-                       { title: 'Your Task Deadline', value: 'i want to know my ddls' },
-                       { title: 'Your Assigned Task', value: 'i want to know my task' },
-                       { title: 'Assign Task', value: 'assign task' } 
-                     ], 
-                     msgType: 'button' }, 
+          title: 'Hello! Here is the options for you, so what do you want to do?',
+          buttons: [
+            { title: 'Your Task Deadline', value: 'i want to know my ddls' },
+            { title: 'Your Assigned Task', value: 'i want to know my task' },
+            { title: 'Assign Task', value: 'assign task' }],
+          msgType: 'button',
           sender: 'bot' 
         },
         { 
           id: 'msg2', 
-          content: { content: 'Hello, what can I help you?', msgType: 'plain' }, 
+          content: 'Hello, what can I help you?' , 
+          msgType: 'plain',
           sender: 'bot' 
         },
         { 
@@ -78,50 +78,48 @@ export default {
     return { store }
   },
   created() {
-    console.log('created')
-    // this.initWebSocket()
-    // 调用后端API获取当前userId所属的群组列表
-    const userId = 4 // 替换为实际的用户ID
-    const url = `http://localhost:8080/user-group/getGroups/${userId}` // 在URL中添加占位符
-    axios.get(url)
-      .then(response => {
-        console.log(response.data)
-        this.groups = response.data // 将获取到的群组列表赋值给组件的groups数组
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    sessionStorage.setItem('userId', '22')
   },
   methods: {
+    sendButtonMessage(value){
+      this.messages.push({
+        content: value,
+        sender: 'user'
+      })
+      axios.post('http://172.25.110.31:8090/sendbot', {
+          "content": value,
+          "uid":sessionStorage.getItem('userId')
+      }).then(response => {
+        console.log(response.data)
+         response.data.messages.forEach(element => {
+          element['sender'] = 'bot'
+          this.messages.push(element)
+         });
+      })
+      this.myMessage = ''
+      console.log(this.messages)
+    },
     buttonClick(value) {
-      // You can update this method to send the value to the backend
-      console.log(value);
     },
-    websocketOnError() {
-      console.log('连接失败')
-    },
-    websocketOnMessage(e) { // 数据接收
-      this.msgList.push('###::' + e.data)
-    },
+    
     send() {
-      if (!window.WebSocket) {
-        return
-      }
-      if (this.websock.readyState === WebSocket.OPEN) {
-        this.msgList.push('####::' + this.myMessage)
-        const resObj = {
-          id: '-1',
-          message: this.id + ':' + this.myMessage
-        }
-        this.websock.send(JSON.stringify(resObj))
-      } else {
-        alert('与客服连接没有建立成功！')
-      }
+      this.messages.push({
+        content: this.myMessage,
+        sender: 'user'
+      })
+      axios.post('http://172.25.110.31:8090/sendbot', {
+          "content": this.myMessage,
+          "uid":sessionStorage.getItem('userId')
+      }).then(response => {
+        console.log(response.data)
+         response.data.messages.forEach(element => {
+          element['sender'] = 'bot'
+          this.messages.push(element)
+         });
+      })
+      this.myMessage = ''
+      console.log(this.messages)
     },
-    websocketClose(e) { // 关闭
-      this.mesTemp = '与客服连接关闭。 \r\n'
-      console.log('已关闭连接', e)
-    }
   }
 }
 </script>
