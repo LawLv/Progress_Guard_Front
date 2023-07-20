@@ -6,24 +6,12 @@
       <el-select v-model="listQuery.taskPriority" placeholder="Imp" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
       </el-select>
-      <!--      <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">-->
-      <!--        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />-->
-      <!--      </el-select>-->
-      <!--      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">-->
-      <!--        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />-->
-      <!--      </el-select>-->
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         Add
       </el-button>
-      <!--      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">-->
-      <!--        Export-->
-      <!--      </el-button>-->
-      <!--      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">-->
-      <!--        reviewer-->
-      <!--      </el-checkbox>-->
     </div>
 
     <el-table
@@ -51,8 +39,14 @@
         <template slot-scope="{row}">
 <!--          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>-->
 <!--          <el-tag>{{ row.taskName | typeFilter }}</el-tag>-->
-          <span class="link-type" @click="handleInfo">{{row.taskName}}</span>
+          <span class="link-type" @click="handleInfo(row.taskId)">{{row.taskName}}</span>
+
+
           <el-dialog title="Information" :visible.sync="dialogInfoVisible" @close="dialogInfoVisible = false" class="info">
+            <el-card class="Description">
+              <h3>Task Description</h3>
+              {{row.taskDesc}}
+            </el-card>
             <el-timeline>
               <el-timeline-item v-for="(item,index) in timeline" :key="index" :timestamp="item.timestamp" placement="top">
                 <el-card>
@@ -62,6 +56,8 @@
               </el-timeline-item>
             </el-timeline>
           </el-dialog>
+
+
         </template>
       </el-table-column>
 <!--      <el-table-column label="Author" width="110px" align="center">-->
@@ -397,8 +393,21 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    handleInfo() {
+    handleInfo(taskId) {
       this.dialogInfoVisible = true
+      this.timeline = []
+      axios.get('http://localhost:8080/task-log/' + taskId)
+        .then(response => {
+          console.log(response.data)
+          response.data.forEach(item => {
+            console.log(item)
+            this.timeline.push({
+              timestamp: item.timeStamp,
+              title: 'Task ' + item.logInfo,
+              content: 'Sam Update the task at ' + item.timeStamp
+            })
+          })
+        })
     },
     createData() {
       this.$refs['dataForm'].validate((valid) => {
@@ -516,6 +525,9 @@ export default {
   overflow-y: scroll;
   margin-top: 200px;
   position: fixed;
+}
+.Description{
+  margin-bottom: 3vh;
 }
 
 </style>
