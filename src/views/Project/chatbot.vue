@@ -3,7 +3,7 @@
     <div class="filter-container">
         <div class="chat-container">
           <div>
-            <h1 class="title">SWS ALX</h1>
+            <h1 class="title">Chat Bot</h1>
             <el-card class="card">
               <div class="message-container"  ref="messageContainer">
                 <div v-for="(msg, index) in messages" :key="index" class="message-item" :class="{'message-server': msg.sender === 'server', 'message-user': msg.sender === 'user'}">
@@ -48,27 +48,27 @@ export default {
     return {
       myMessage: null,
       messages: [
-        { 
-          id: 'msg1', 
-          title: 'Hello! Here is the options for you, so what do you want to do?',
-          buttons: [
-            { title: 'Your Task Deadline', value: 'i want to know my ddls' },
-            { title: 'Your Assigned Task', value: 'i want to know my task' },
-            { title: 'Assign Task', value: 'assign task' }],
-          msgType: 'button',
-          sender: 'bot' 
-        },
-        { 
-          id: 'msg2', 
-          content: 'Hello, what can I help you?' , 
-          msgType: 'plain',
-          sender: 'bot' 
-        },
-        { 
-          id: 'msg3', 
-          content: 'I want to know my deadlines', 
-          sender: 'user' 
-        }
+        // {
+        //   id: 'msg1',
+        //   title: 'Hello! Here is the options for you, so what do you want to do?',
+        //   buttons: [
+        //     { title: 'Your Task Deadline', value: 'i want to know my ddls' },
+        //     { title: 'Your Assigned Task', value: 'i want to know my task' },
+        //     { title: 'Assign Task', value: 'assign task' }],
+        //   msgType: 'button',
+        //   sender: 'bot'
+        // },
+        // {
+        //   id: 'msg2',
+        //   content: 'Hello, what can I help you?' ,
+        //   msgType: 'plain',
+        //   sender: 'bot'
+        // },
+        // {
+        //   id: 'msg3',
+        //   content: 'I want to know my deadlines',
+        //   sender: 'user'
+        // }
       ]
     }
   },
@@ -109,7 +109,7 @@ export default {
     },
     buttonClick(value) {
     },
-    
+
     send() {
       this.messages.push({
         content: this.myMessage,
@@ -237,7 +237,7 @@ html, body {
 /* .message-item::before {
   content: '';
   position: absolute;
-  left: 10%; 
+  left: 10%;
   right: 10%;
   top: 0;
   border-top: 1px solid #8a8a8a;

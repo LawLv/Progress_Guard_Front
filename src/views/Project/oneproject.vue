@@ -404,7 +404,7 @@ export default {
             this.timeline.push({
               timestamp: item.timeStamp,
               title: 'Task ' + item.logInfo,
-              content: 'Sam Update the task at ' + item.timeStamp
+              content: 'Update the task at ' + item.timeStamp
             })
           })
         })

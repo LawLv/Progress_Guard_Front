@@ -105,7 +105,7 @@ export default {
       messages: {
         '1680923793096937473': [
           { id: 'msg1', content: 'Hello from Group 1', sender: 'Emily Brown', fromUid: '4' },
-          { id: 'msg2', content: 'Response from Group 1', sender: 'server', fromUid: '5' }
+          { id: 'msg2', content: 'Response from Group 1', sender: 'Steve', fromUid: '5' }
         ],
         1: [
           { id: 'msg1', content: 'Hello from Group 1', sender: 'user' },
