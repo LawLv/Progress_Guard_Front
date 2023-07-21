@@ -104,8 +104,6 @@ export default {
       groupMembers: null,
       messages: {
         '1680923793096937473': [
-          { id: 'msg1', content: 'Hello from Group 1', sender: 'Emily Brown', fromUid: '4' },
-          { id: 'msg2', content: 'Response from Group 1', sender: 'Steve', fromUid: '5' }
         ],
         1: [
           { id: 'msg1', content: 'Hello from Group 1', sender: 'user' },
@@ -171,7 +169,7 @@ export default {
     // this.initWebSocket()
     // 调用后端API获取当前userId所属的群组列表
     const userId = 4 // 替换为实际的用户ID
-    const url = `http://localhost:8080/user-group/getGroups/${userId}` // 在URL中添加占位符
+    const url = `http://localhost:8080/user-group/getGroups/`+ sessionStorage.getItem('userId') // 在URL中添加占位符
     axios.get(url)
       .then(response => {
         console.log(response.data)
@@ -213,7 +211,15 @@ export default {
         console.log('收到消息:', message)
         // message.text = content, message.fromUid的对应username = sender
         this.fromUid = message.fromUid
-        this.messages[this.selectedGroupId].push({ id: message.date, content: message.text, sender: this.userName, fromUid: message.fromUid })
+        if (message.fromUid === sessionStorage.getItem('userId')) {
+          console.log("my message")
+          this.messages[this.selectedGroupId].push({ id: message.date, content: message.text, sender: this.userName, fromUid: message.fromUid })
+          console.log(this.messages[this.selectedGroupId])
+        } else {
+          console.log("other message")
+          this.messages[this.selectedGroupId].push({ id: message.date, content: message.text, sender: this.groupMembers.find(user => user.userId === this.fromUid).username, fromUid: message.fromUid })
+          console.log(this.messages[this.selectedGroupId])
+        }
         console.log('selectedMessage is : ')
         console.log(this.selectedGroupMessages)
       }

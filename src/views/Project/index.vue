@@ -178,7 +178,7 @@ export default {
     // if (!this.roles.includes('admin')) {
     // this.currentRole = 'editorDashboard'
     // }
-    sessionStorage.setItem('userId', '4')
+    // sessionStorage.setItem('userId', '4')
     this.getList()
   }
 };

@@ -24,18 +24,18 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
-        <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Deadline" width="150px" align="center">
+<!--      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.id }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+      <el-table-column label="Deadline" width="201px" align="center">
         <template slot-scope="{row}">
 <!--          <span>{{ row.deadline | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>-->
           <span>{{ formatDateTime(row.deadline) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Task Name" min-width="150px">
+      <el-table-column label="Task Name" min-width="50px">
         <template slot-scope="{row}">
 <!--          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>-->
 <!--          <el-tag>{{ row.taskName | typeFilter }}</el-tag>-->
@@ -60,11 +60,11 @@
 
         </template>
       </el-table-column>
-<!--      <el-table-column label="Author" width="110px" align="center">-->
-<!--        <template slot-scope="{row}">-->
-<!--          <span>{{ row.author }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <el-table-column label="Member" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ memberOptions.find(user => user.userId === row.userId).username }} </span>
+        </template>
+      </el-table-column>
 <!--      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">-->
 <!--        <template slot-scope="{row}">-->
 <!--          <span style="color:red;">{{ row.reviewer }}</span>-->
@@ -412,18 +412,6 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          // this.temp.author = 'vue-element-admin'
-          // createArticle(this.temp).then(() => {
-          //   this.list.unshift(this.temp)
-          //   this.dialogFormVisible = false
-          //   this.$notify({
-          //     title: 'Success',
-          //     message: 'Created Successfully',
-          //     type: 'success',
-          //     duration: 2000
-          //   })
-          // })
           console.log('this.temp is : ')
           console.log(this.temp)
           axios.post('http://localhost:8080/task/create', this.temp)

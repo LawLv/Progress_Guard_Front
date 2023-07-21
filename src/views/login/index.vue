@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm"  class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
         <h3 class="title">Login Form</h3>
@@ -154,57 +154,48 @@ export default {
       })
     },
     handleLogin() {
-      // axios.get('http://localhost:8080/user/login', {
-      //   params: this.loginForm
-      // })
-      //   .then(response => {
-      //     console.log(response.data)
-      //     if (response.data.length !== 0) {
-      //       console.log('in push')
-      //       this.loading = false
-      //       sessionStorage.setItem('userId', response.data.userId)
-      //       this.loginForm = {
-      //         username: 'admin',
-      //         password: '111111'
-      //       }
-      //       this.$store.dispatch('user/login', this.loginForm)
-      //         .then(() => {
-      //           this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-      //           this.loading = false
-      //         })
-      //       // this.$router.push('/project')
-      //       // this.$router.replace('/project')
-      //       // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-      //     } else {
-      //       this.loading = false
-      //     }
-      //   })
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
-            })
-            .catch(() => {
-              this.loading = false
-            })
-          // axios.post('http://localhost:8080/user/login', this.loginForm)
-          //   .then(response => {
-          //     if (response.data !== null) {
-          //       this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-          //       this.loading = false
-          //       sessionStorage.setItem('userId', response.data.userId)
-          //     } else {
-          //       this.loading = false
-          //     }
-          //   })
-        } else {
-          console.log('error submit!!')
-          return false
+      axios.get('http://localhost:8080/user/login', {
+        params:{
+          mail: this.loginForm.username,
+          password: this.loginForm.password
         }
       })
+        .then(response => {
+          console.log(response.data)
+          if (response.data.code === 200) {
+            console.log('in push')
+            this.loading = false
+            sessionStorage.setItem('userId', response.data.user.userId)
+            this.$router.push('project')
+          } else {
+            this.loading = false
+          }
+        })
+      // this.loading = true
+      // this.$store.dispatch('user/login', this.loginForm)
+      //   .then(() => {
+      //     this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+      //     this.loading = false
+      //   })
+      //   .catch(() => {
+      //     this.loading = false
+      //   })
+      // this.$refs.loginForm.validate(valid => {
+      //   if (valid) {
+      //     this.loading = true
+      //     this.$store.dispatch('user/login', this.loginForm)
+      //       .then(() => {
+      //         this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+      //         this.loading = false
+      //       })
+      //       .catch(() => {
+      //         this.loading = false
+      //       })
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
