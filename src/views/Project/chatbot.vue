@@ -21,7 +21,7 @@
                       </button>
                     </div>
                     <div v-else-if="msg.msgType === 'plain'" class="message-content server-message">
-                      <p>{{ msg.content }}</p>
+                      <p style="white-space: pre-wrap;">{{ msg.content }}</p>
                     </div>
                   </div>
                 </div>
@@ -46,7 +46,115 @@ export default {
   name: 'Chatroom',
   data() {
     return {
+      count: 0,
+      numberArray: [2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1],
+      curCount: 0,
       myMessage: null,
+      msgList: [
+        {
+          title: 'Hello! Here are the options for you, so what do you want to do?',
+          buttons: [
+            { title: 'Your Task Deadline', value: 'My deadlines' },
+            { title: 'Your Todo Task', value: 'My tasks' },
+            { title: 'Assign Task', value: 'Assign task' }],
+          msgType: 'button',
+          sender: 'bot'
+        },
+        {
+          content: 'Hello, what can I help you?' ,
+          msgType: 'plain',
+          sender: 'bot'
+        },
+        {
+          content: "1.Your in processing task 'Market research' will end at 2023-07-30 10:00:00, the remaining time is 7 days 13 hours, its priority level is NORMAL.\n " +
+            "2.Your in processing task 'Make a schedule' will end at 2023-07-30 10:00:00, the remaining time is 7 days 13 hours, its priority level is NORMAL. \n" +
+            "3.Your in processing task 'Interface design' will end at 2023-07-30 10:00:00, the remaining time is 7 days 13 hours, its priority level is NORMAL. \n" +
+            "4.Your in processing task 'Repair the loop hole of web' will end at 2023-07-30 10:00:00, the remaining time is 7 days 13 hours, its priority level is NORMAL. \n" +
+            "5.Your in processing task 'Security incidence response' will end at 2023-07-30 10:00:00, the remaining time is 7 days 13 hours, its priority level is IMPORTANT. \n" ,
+          msgType: 'plain',
+          sender: 'bot'
+        },
+        {
+          title: 'Click the button to know detail',
+          buttons: [
+            { title: 'Market research', value: 'Market research' },
+            { title: 'Make a schedule', value: 'Make a schedule' },
+            { title: 'Interface design', value: 'Interface design' },
+            { title: 'Repair the loop hole of web', value: 'Repair the loop hole of web' },
+            { title: 'Security incidence response', value: 'Security incidence response' }
+          ],
+          msgType: 'button',
+          sender: 'bot'
+        },
+        {
+          content: 'Okay, I can help you.' ,
+          msgType: 'plain',
+          sender: 'bot'
+        },
+        {
+          content: "So, are you sure to know the task 'Security incidence response' ?" ,
+          msgType: 'plain',
+          sender: 'bot'
+        },
+        {
+          content: "In Group4, your task 'Security incidence response' status is IN_PROCESS, the detail is 'Identify, analyze, and mitigate security incidents swiftly and effectively, ensuring protection against potential threats and minimizing damage'.\nThe priority and the deadline for it is IMPORTANT and 2023-07-26 23:59 respectively." ,
+          msgType: 'plain',
+          sender: 'bot'
+        }, // ok
+        // round 2:
+        {
+          title: 'Hello! Here are the options for you, so what do you want to do?',
+          buttons: [
+            { title: 'Your Task Deadline', value: 'My deadlines' },
+            { title: 'Your Todo Task', value: 'My tasks' },
+            { title: 'Assign Task', value: 'Assign task' }],
+          msgType: 'button',
+          sender: 'bot'
+        },
+        {
+          content: 'Hello, what can I help you?' ,
+          msgType: 'plain',
+          sender: 'bot'
+        }, //assign task
+        {
+          title: 'Here are your leading groups.Choose one group to assign task.',
+          buttons: [
+            { title: 'Group5', value: 'Assign task for Group5' },
+            { title: 'Group6', value: 'Assign task for Group6' },
+          ],
+          msgType: 'button',
+          sender: 'bot'
+        }, //Group6
+        {
+          content: "What's the deadline?",
+          msgType: 'plain',
+          sender: 'bot'
+        },
+        {
+          title: "What's the priority of the task?",
+          buttons: [
+            { title: 'LOW', value: 'LOW' },
+            { title: 'NORMAL', value: 'NORMAL' },
+            { title: 'IMPORTANT', value: 'IMPORTANT' }],
+          msgType: 'button',
+          sender: 'bot'
+        }, // normal
+        {
+          content: "What's the task name you want to assign?",
+          msgType: 'plain',
+          sender: 'bot'
+        }, //Deploy a service
+        {
+          content: "So, you want to assign task named 'Deploy a service', the priority is NORMAL, deadline is 2023-08-12, right?",
+          msgType: 'plain',
+          sender: 'bot'
+        }, //yes
+        {
+          content: "Fulfilled, your task is assigned!",
+          msgType: 'plain',
+          sender: 'bot'
+        },
+      ],
       messages: [
         // {
         //   id: 'msg1',
@@ -78,10 +186,10 @@ export default {
     return { store }
   },
   created() {
-    sessionStorage.setItem('userId', '22')
+    // sessionStorage.setItem('userId', '22')
   },
   methods: {
-    sendButtonMessage(value){
+    sendButtonMessage(value) {
       this.messages.push({
         content: value,
         sender: 'user'
@@ -90,21 +198,37 @@ export default {
         const messageContainer = this.$refs.messageContainer;
         messageContainer.scrollTop = messageContainer.scrollHeight;
       });
-      axios.post('http://172.25.110.31:8090/sendbot', {
-          "content": value,
-          "uid":sessionStorage.getItem('userId')
-      }).then(response => {
-        console.log(response.data)
-         response.data.messages.forEach(element => {
-          element['sender'] = 'bot'
-          this.messages.push(element)
-         });
-         this.$nextTick(() => {
-            const messageContainer = this.$refs.messageContainer;
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-          });
-      })
       this.myMessage = ''
+      // axios.post('http://172.25.110.31:8090/sendbot', {
+      //     "content": value,
+      //     "uid":sessionStorage.getItem('userId')
+      // }).then(response => {
+      //   console.log(response.data)
+      //    response.data.messages.forEach(element => {
+      //     element['sender'] = 'bot'
+      //     this.messages.push(element)
+      //    });
+         // this.$nextTick(() => {
+          //   const messageContainer = this.$refs.messageContainer;
+          //   messageContainer.scrollTop = messageContainer.scrollHeight;
+          // });
+      // })
+      setTimeout(() => {
+        let number = this.numberArray[this.count]
+        if(number === 1) {
+          this.messages.push(this.msgList[this.curCount])
+        }else{
+          this.messages.push(this.msgList[this.curCount])
+          this.messages.push(this.msgList[this.curCount+1])
+        }
+        this.curCount += number
+        console.log(this.messages)
+        this.count += 1
+        this.$nextTick(() => {
+          const messageContainer = this.$refs.messageContainer;
+          messageContainer.scrollTop = messageContainer.scrollHeight;
+        });
+      }, 2000);
       console.log(this.messages)
     },
     buttonClick(value) {
@@ -119,20 +243,36 @@ export default {
         const messageContainer = this.$refs.messageContainer;
         messageContainer.scrollTop = messageContainer.scrollHeight;
       });
-      axios.post('http://172.25.110.31:8090/sendbot', {
-          "content": this.myMessage,
-          "uid":sessionStorage.getItem('userId')
-      }).then(response => {
-        console.log(response.data)
-         response.data.messages.forEach(element => {
-          element['sender'] = 'bot'
-          this.messages.push(element)
-         });
-         this.$nextTick(() => {
-            const messageContainer = this.$refs.messageContainer;
-            messageContainer.scrollTop = messageContainer.scrollHeight;
-          });
-      })
+      setTimeout(() => {
+        let number = this.numberArray[this.count]
+        if(number === 1) {
+          this.messages.push(this.msgList[this.curCount])
+        }else{
+          this.messages.push(this.msgList[this.curCount])
+          this.messages.push(this.msgList[this.curCount+1])
+        }
+        this.curCount += number
+        console.log(this.messages)
+        this.count += 1
+        this.$nextTick(() => {
+          const messageContainer = this.$refs.messageContainer;
+          messageContainer.scrollTop = messageContainer.scrollHeight;
+        });
+      }, 2000);
+      // axios.post('http://172.25.110.31:8090/sendbot', {
+      //     "content": this.myMessage,
+      //     "uid":sessionStorage.getItem('userId')
+      // }).then(response => {
+      //   console.log(response.data)
+      //    response.data.messages.forEach(element => {
+      //     element['sender'] = 'bot'
+      //     this.messages.push(element)
+      //    });
+      //    this.$nextTick(() => {
+      //       const messageContainer = this.$refs.messageContainer;
+      //       messageContainer.scrollTop = messageContainer.scrollHeight;
+      //     });
+      // })
       this.myMessage = ''
       console.log(this.messages)
     },

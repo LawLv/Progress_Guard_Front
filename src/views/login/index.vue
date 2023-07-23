@@ -98,8 +98,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '12012438@mail.sustech.edu.cn',
+        password: 'pass1234'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -154,8 +154,8 @@ export default {
       })
     },
     handleLogin() {
-      axios.get('http://localhost:8080/user/login', {
-        params:{
+      axios.get('http://3.88.162.233:8080/user/login', {
+        params: {
           mail: this.loginForm.username,
           password: this.loginForm.password
         }

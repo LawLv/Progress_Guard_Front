@@ -47,7 +47,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/project',
+    redirect: '/login',
     children: [
       {
         path: 'project',
@@ -134,7 +134,7 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
   // {
   //   path: '/Task',
   //   component: Layout,
