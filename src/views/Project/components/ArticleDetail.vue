@@ -263,7 +263,7 @@ export default {
     },
     getRemoteUserList(query) {
       console.log(query)
-      axios.get('https://3.85.228.142:8080/user/' + query)
+      axios.get('https://52.87.152.117:8080/user/' + query)
         .then(response => {
           console.log('get remote user list: ')
           console.log(response.data)

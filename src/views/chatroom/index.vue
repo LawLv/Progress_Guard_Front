@@ -169,7 +169,7 @@ export default {
     // this.initWebSocket()
     // 调用后端API获取当前userId所属的群组列表
     const userId = 4 // 替换为实际的用户ID
-    const url = `https://3.85.228.142:8080/user-group/getGroups/`+ sessionStorage.getItem('userId') // 在URL中添加占位符
+    const url = `https://52.87.152.117:8080/user-group/getGroups/`+ sessionStorage.getItem('userId') // 在URL中添加占位符
     axios.get(url)
       .then(response => {
         console.log(response.data)
@@ -188,7 +188,7 @@ export default {
       this.selectedGroupId = groupId
       const selectedGroup = this.groups.find(group => group.groupId === groupId)
       this.selectedGroupName = selectedGroup ? selectedGroup.groupName : ''
-      axios.get('https://3.85.228.142:8080/user-group/getUsers/' + this.selectedGroupId)
+      axios.get('https://52.87.152.117:8080/user-group/getUsers/' + this.selectedGroupId)
         .then(response => {
           this.groupMembers = response.data
         })
@@ -204,7 +204,7 @@ export default {
     initWebSocket() { // 初始化websocket
       let url
       // eslint-disable-next-line prefer-const
-      url = 'ws://3.85.228.142:8080/ws/' + this.selectedGroupId + '/' + sessionStorage.getItem('userId')
+      url = 'wss://52.87.152.117:8080/ws/' + this.selectedGroupId + '/' + sessionStorage.getItem('userId')
       this.websock = new WebSocket(url)
       this.websock.onmessage = (event) => {
         const message = JSON.parse(event.data)

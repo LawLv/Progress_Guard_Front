@@ -154,7 +154,7 @@ export default {
       })
     },
     handleLogin() {
-      axios.get('https://3.85.228.142:8080/user/login', {
+      axios.get('https://52.87.152.117:8080/user/login', {
         params: {
           mail: this.loginForm.username,
           password: this.loginForm.password

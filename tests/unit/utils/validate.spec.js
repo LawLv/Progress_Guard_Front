@@ -7,7 +7,7 @@ describe('Utils:validate', () => {
   })
   it('validURL', () => {
     expect(validURL('https://github.com/PanJiaChen/vue-element-admin')).toBe(true)
-    expect(validURL('http://github.com/PanJiaChen/vue-element-admin')).toBe(true)
+    expect(validURL('https://github.com/PanJiaChen/vue-element-admin')).toBe(true)
     expect(validURL('github.com/PanJiaChen/vue-element-admin')).toBe(false)
   })
   it('validLowerCase', () => {

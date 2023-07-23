@@ -16,7 +16,7 @@
       :key="imagecropperKey"
       :width="300"
       :height="300"
-      url="https://httpbin.org/post"
+      url="https://httpsbin.org/post"
       lang-type="en"
       @close="close"
       @crop-upload-success="cropSuccess"

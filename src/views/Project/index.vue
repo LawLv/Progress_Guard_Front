@@ -140,7 +140,7 @@ export default {
   },
   methods: {
     getList() {
-      axios.get('https://3.85.228.142:8080/user-group/getGroups/' + sessionStorage.getItem('userId'))
+      axios.get('https://52.87.152.117:8080/user-group/getGroups/' + sessionStorage.getItem('userId'))
         .then(response => {
           console.log('get response')
           console.log(response.data)

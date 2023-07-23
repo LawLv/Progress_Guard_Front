@@ -199,7 +199,7 @@ export default {
         messageContainer.scrollTop = messageContainer.scrollHeight;
       });
       this.myMessage = ''
-      // axios.post('http://172.25.110.31:8090/sendbot', {
+      // axios.post('https://172.25.110.31:8090/sendbot', {
       //     "content": value,
       //     "uid":sessionStorage.getItem('userId')
       // }).then(response => {
@@ -259,7 +259,7 @@ export default {
           messageContainer.scrollTop = messageContainer.scrollHeight;
         });
       }, 2000);
-      // axios.post('http://172.25.110.31:8090/sendbot', {
+      // axios.post('https://172.25.110.31:8090/sendbot', {
       //     "content": this.myMessage,
       //     "uid":sessionStorage.getItem('userId')
       // }).then(response => {

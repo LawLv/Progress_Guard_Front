@@ -55,7 +55,7 @@
 
 ## 前準備
 
-ローカル環境に [node](http://nodejs.org/) と [git](https://git-scm.com/)のインストールが必要です。[ES2015+](http://es6.ruanyifeng.com/)、[vue](https://cn.vuejs.org/index.html)、[vuex](https://vuex.vuejs.org/zh-cn/)、[vue-router](https://router.vuejs.org/zh-cn/) 、[vue-cli](https://github.com/vuejs/vue-cli) 、[axios](https://github.com/axios/axios) と [element-ui](https://github.com/ElemeFE/element)で開発しています。Requestは[Mock.js](https://github.com/nuysoft/Mock)のモックデータを使っています。
+ローカル環境に [node](https://nodejs.org/) と [git](https://git-scm.com/)のインストールが必要です。[ES2015+](https://es6.ruanyifeng.com/)、[vue](https://cn.vuejs.org/index.html)、[vuex](https://vuex.vuejs.org/zh-cn/)、[vue-router](https://router.vuejs.org/zh-cn/) 、[vue-cli](https://github.com/vuejs/vue-cli) 、[axios](https://github.com/axios/axios) と [element-ui](https://github.com/ElemeFE/element)で開発しています。Requestは[Mock.js](https://github.com/nuysoft/Mock)のモックデータを使っています。
 
 **バグ修正や新規機能追加のissue と pull requestは大歓迎です。**
 
@@ -161,7 +161,7 @@ npm install
 npm run dev
 ```
 
-http://localhost:9527 が自動的に開きます。
+https://localhost:9527 が自動的に開きます。
 
 ## Build
 

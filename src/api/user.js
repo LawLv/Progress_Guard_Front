@@ -7,7 +7,7 @@ export function login(data) {
   //   data
   // })
   return request({
-    url: 'http://localhost:8080/user/login',
+    url: 'https://52.87.152.117:8080/user/login',
     method: 'get',
     params: data
   })

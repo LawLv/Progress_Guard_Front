@@ -324,7 +324,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      axios.get('https://3.85.228.142:8080/task/get-by-condition', {
+      axios.get('https://52.87.152.117:8080/task/get-by-condition', {
         params: {
           userId: sessionStorage.getItem('userId'),
           groupId: sessionStorage.getItem('groupId')
@@ -334,7 +334,7 @@ export default {
         this.list = response.data
         this.listLoading = false
       })
-      axios.get('https://3.85.228.142:8080/user-group/getUsers/' + sessionStorage.getItem('groupId'))
+      axios.get('https://52.87.152.117:8080/user-group/getUsers/' + sessionStorage.getItem('groupId'))
         .then(response => {
           console.log(response.data)
           this.memberOptions = response.data
@@ -349,7 +349,7 @@ export default {
       console.log(row)
       row.logUid = sessionStorage.getItem('userId')
       row.status = status
-      axios.post('https://3.85.228.142:8080/task/update', row)
+      axios.post('https://52.87.152.117:8080/task/update', row)
         .then(response => {
           console.log(response.data)
         })
@@ -396,7 +396,7 @@ export default {
     handleInfo(taskId) {
       this.dialogInfoVisible = true
       this.timeline = []
-      axios.get('https://3.85.228.142:8080/task-log/' + taskId)
+      axios.get('https://52.87.152.117:8080/task-log/' + taskId)
         .then(response => {
           console.log(response.data)
           response.data.forEach(item => {
@@ -414,7 +414,7 @@ export default {
         if (valid) {
           console.log('this.temp is : ')
           console.log(this.temp)
-          axios.post('https://3.85.228.142:8080/task/create', this.temp)
+          axios.post('https://52.87.152.117:8080/task/create', this.temp)
             .then(response => {
               console.log(response.data)
               // this.list.unshift(this.temp)

@@ -97,7 +97,7 @@ export default {
 
     getCSSString(url, variable) {
       return new Promise(resolve => {
-        const xhr = new XMLHttpRequest()
+        const xhr = new XMLhttpsRequest()
         xhr.onreadystatechange = () => {
           if (xhr.readyState === 4 && xhr.status === 200) {
             this[variable] = xhr.responseText.replace(/@font-face{[^}]+}/, '')
