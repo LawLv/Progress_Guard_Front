@@ -1,6 +1,6 @@
 # Progress Guard Front
 
-![项目海报](./poster.png)
+![项目海报](./hb.png)
 
 **Progress Guard Front** 是一个简洁现代的前端项目，旨在为管理后台提供高效、用户友好的界面体验。
 
